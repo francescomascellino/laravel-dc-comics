@@ -15,11 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::resource('comics', PageController::class);
+
 /* Route::get('/', function () {
     return view('welcome');
 }); */
 
-Route::resource('comics', PageController::class);
+
 
 
 // Route::get('/', [PageController::class, 'comics.index'])->name('index');
