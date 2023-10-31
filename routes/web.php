@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
     return view('welcome');
 }); */
 
-Route::resource('/', [PageController::class, 'comics.index']);
+Route::resource('comics', PageController::class);
 
 
-// Route::get('/', [PageController::class, 'index'])->name('home');
+Route::get('/', [PageController::class, 'comics.index'])->name('index');

@@ -1,1 +1,188 @@
 @import '~bootstrap/scss/bootstrap';
+
+// VARIABLES
+$dc-light: #ffffff;
+$dc-info: #0282f9;
+$dc-secondary: #797979;
+$dc-tertiary: #303030;
+$dc-dark: #1c1c1c;
+
+
+// GENERAL RULES
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: $dc-light;
+}
+
+// HEADER
+
+.dc-additional-sites {
+    background-color: $dc-info;
+    color: $dc-light;
+    font-weight: bold;
+}
+
+.navbar-nav a.nav-link {
+    font-weight: bold;
+    color: $dc-secondary;
+    border-bottom: 5px solid transparent;
+
+}
+
+.dc-active {
+    color: $dc-info !important;
+    border-bottom: 5px solid $dc-info !important;
+}
+
+input#dc-search {
+    font-weight: bold;
+    color: $dc-secondary;
+    border: none;
+    border-radius: 0%;
+
+}
+
+// NOT WORKING
+input#dc-search::placeholder {
+    text-align: right !important;
+}
+
+.dc-searchContainer {
+    border-bottom: 3px solid $dc-info !important;
+}
+
+.dc-jumbotron {
+    height: 400px;
+    background-image: url(../img/jumbotron.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    .dc-currentSeries {
+        background-color: $dc-info;
+    }
+
+}
+
+.dc-currentSeries {
+    background-color: $dc-info;
+    margin-left: 5rem;
+}
+
+// MAIN
+
+.dc-mainContainer {
+    background-color: $dc-dark;
+}
+
+// MENU
+
+.dc-menuCont {
+    background-color: $dc-info;
+
+}
+
+.dcMenuEl {
+    a {
+        color: $dc-light;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: small;
+
+        img {
+            height: 45px;
+        }
+    }
+}
+
+// CARD CONTAINER
+
+.dc-more {
+    background-color: $dc-info;
+    border-radius: 0%;
+    color: $dc-light;
+    font-weight: bold;
+}
+
+// CARDS
+
+.card {
+
+    .dc-coverContainer {
+        width: 100%;
+        aspect-ratio: 1/1;
+        background-position: top center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+
+    p {
+        color: $dc-light;
+
+        font-size: 0.7rem;
+    }
+
+}
+
+// FOOTER
+
+.dc-footerCont {
+    background-image: url(../img/footer-bg.jpg);
+    background-size: cover;
+
+}
+
+.dc-footerLinks {
+
+    max-height: 375px;
+
+    // PERCHE' APPARE DUE VOLTE?
+    .dc-bigLogo {
+        background-image: url(../img/dc-logo-bg.png);
+        background-repeat: no-repeat;
+        background-position: right;
+    }
+
+    .dc-listContainer {
+
+        margin-right: 2rem;
+
+        h5 {
+            font-weight: bold;
+        }
+
+        li a {
+            font-size: medium;
+            text-decoration: none;
+            color: $dc-secondary;
+
+            &:hover {
+                color: $dc-info;
+            }
+        }
+    }
+
+}
+
+.dc-contacts {
+    padding: 1.5rem 0;
+    background-color: $dc-tertiary;
+
+    .dc-signUpBtn {
+        border: 3px solid $dc-info;
+        border-radius: 0;
+        padding: 0.7rem 0.8rem;
+        font-weight: bold;
+        color: white;
+    }
+
+    h4 {
+        color: $dc-info;
+        font-weight: bold;
+    }
+}
