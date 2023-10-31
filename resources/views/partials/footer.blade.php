@@ -15,14 +15,13 @@
 
                             <ol class="list-unstyled">
 
-                                @foreach ($element['links'] as $link)
+                                {{--                                 @foreach ($element['links'] as $link)
                                     <li class="text-capitalize"><a href="{{$link['path']}}">{{$link['text']}}</a></li>
-                                @endforeach
+                                @endforeach --}}
 
                             </ol>
 
                         </div>
-
                     @endforeach
 
                 </div>
@@ -39,9 +38,9 @@
 
                         <h4 class="text-uppercase m-0">follow us</h4>
 
-                        @foreach (config('social-links') as $link)
+                        {{--                         @foreach (config('social-links') as $link)
                         <a href="{{$link['path']}}" class="ms-3"><img src="{{Vite::asset($link['img'])}}" alt="{{$link['name']}}"></a>
-                        @endforeach
+                        @endforeach --}}
 
                     </div>
 

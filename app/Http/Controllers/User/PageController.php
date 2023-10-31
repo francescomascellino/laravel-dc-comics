@@ -9,11 +9,10 @@ use Illuminate\Http\Request;
 class PageController extends Controller
 {
 
-/*     public function home()
+    public function characters()
     {
-        $comics = Comic::all();
-        return view('welcome', compact('comics'));
-    } */
+        return view('characters');
+    }
 
     /**
      * Display a listing of the resource.
@@ -43,9 +42,9 @@ class PageController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Comic $comic)
     {
-        //
+        return view('comic_details', compact('comic'));
     }
 
     /**
