@@ -5,8 +5,7 @@
 
         <div class="row justify-content-center">
 
-            {{-- CARDS CONTAINER --}}
-            <div class="col-8 py-5 position-relative">
+            <div class="col-8 py-5">
 
                 <h1 class="text-center">ADMIN DATABASE</h1>
 
@@ -50,8 +49,9 @@
                     </table>
                 </div>
 
+                <a class="btn btn-primary" href="{{ route('admin.create') }}">ADD ENTRY</a>
+
             </div>
-            {{-- END CARDS CONTAINER --}}
 
         </div>
 

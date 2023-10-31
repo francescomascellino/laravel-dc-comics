@@ -22,7 +22,8 @@ class AdminController extends Controller
      */
     public function create()
     {
-        //
+        $comics = Comic::all();
+        return view('admin.add', compact('comics'));
     }
 
     /**
