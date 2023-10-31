@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\User\PageController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// DA IL NOME 'comics' ALLE ROUTES DEFINITE TRAMITE User\PageController
 Route::resource('comics', PageController::class);
+
+Route::resource('admin', AdminController::class);
+
 
 /* Route::get('/', function () {
     return view('welcome');

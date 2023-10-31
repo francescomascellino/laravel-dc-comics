@@ -3,6 +3,7 @@
 
         <div class="card bg-transparent">
 
+            {{-- LINK ALLA ROUTE comic.show USANDO L'ID DEL FUMETTO COME CALLBACK --}}
             <a href="{{ route('comics.show', $comic->id) }}">
                 <div class="p-1 dc-coverContainer" style="background-image: url({{ $comic->thumb }})">
 

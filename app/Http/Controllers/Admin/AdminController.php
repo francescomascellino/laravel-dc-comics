@@ -1,26 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comic;
 use Illuminate\Http\Request;
 
-class PageController extends Controller
+class AdminController extends Controller
 {
-
-    public function characters()
-    {
-        return view('characters');
-    }
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $comics = Comic::all();
-        return view('welcome', compact('comics'));
+        return view('admin.index', compact('comics'));
     }
 
     /**
@@ -42,7 +36,6 @@ class PageController extends Controller
     /**
      * Display the specified resource.
      */
-    // COME PARAMETRO PASSIAMO UNA ISTANZA DEL MODEL Comic
     public function show(Comic $comic)
     {
         return view('comic_details', compact('comic'));

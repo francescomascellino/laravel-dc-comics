@@ -10,18 +10,20 @@
             <div class="navbar-nav d-flex justify-content-between text-uppercase"">
 
                 @foreach (config('navbar-links') as $link)
-                    <a class="nav-link px-4 py-5 {{ Route::currentRouteName() === $link['path'] ? 'dc-active' : ''}}" href="{{Route($link['path'])}}" >
-                {{$link['text']}}
-                </a>
+                    <a class="nav-link px-4 py-5 {{ Route::currentRouteName() === $link['path'] ? 'dc-active' : '' }}"
+                        href="{{ Route($link['path']) }}">
+                        {{ $link['text'] }}
+                    </a>
                 @endforeach
 
             </div>
 
             <div class="col-1 d-flex justify-content-center align-items-center ">
-                <div class="d-flex dc-searchContainer">
+                {{--                 <div class="d-flex dc-searchContainer">
                     <input type="search" id="dc-search" class="form-control" placeholder="Search...">
                     <i class="fa fa-search align-self-center"></i>
-                </div>
+                </div> --}}
+                <a class="btn btn-success" href="{{ route('admin.index') }}">ADMIN</a>
             </div>
 
         </nav>
