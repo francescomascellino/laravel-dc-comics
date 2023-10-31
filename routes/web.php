@@ -29,12 +29,12 @@ Route::get('/', [PageController::class, 'index'])->name('comics');
 
 /*  */
 
-// OLD
+// ORIGINAL
 /* Route::get('/characters', function () {
     return view('characters');
 })->name('characters'); */
 
-// ROUTE CHARACTERS USING PAGE CONTROLLER
+// ROUTE CHARACTERS USING PAGE CONTROLLER. INDICA CHE LA ROUTE VIENE GESTITA DAL METODO characters IN User\PageController CHE RESTITUISCE LA VIEW 'character' (characters.blade.php)
 Route::get('/characters', [PageController::class, 'characters'])->name('characters');
 
 // OLD NAVBAR ROUTES
