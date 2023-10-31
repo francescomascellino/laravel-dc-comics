@@ -19,15 +19,12 @@ use Illuminate\Support\Facades\Route;
 // DA IL NOME 'comics' ALLE ROUTES DEFINITE TRAMITE User\PageController
 Route::resource('comics', PageController::class);
 
+// DA IL NOME 'admin' ALLE ROUTES DEFINITE TRAMITE User\AdminController
 Route::resource('admin', AdminController::class);
+//QUESTO CI PERMETTE DI RIDIRIGERE I LINK USANDO AD ESEMPIO: href="{{ route('admin.create') }}", href="{{ route('admin.index') }}" OPPURE  href="{{ route('comics.show', $comic->id) }}"
 
-
-/* Route::get('/', function () {
-    return view('welcome');
-}); */
-
-// Route::get('/', [PageController::class, 'comics.index'])->name('index');
-
+// INDICA CHE LA ROUTE '/' CORRISPONDE AL METODO 'index' DI User\PageController
+// SE PageController FOSSE SOSTITUITO CON AdminController LA PAGINA INIZIALE SAREBBE LA DASHBOARD DELL'ADMIN CON LA TABELLA
 Route::get('/', [PageController::class, 'index'])->name('comics');
 
 /*  */
