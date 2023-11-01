@@ -225,7 +225,7 @@ DEFINIRE NEL CONTROLLER INTERESSATO IL METODO show():
 // $comic E' UNA ISTANZA DEL MODELLO Comic
 public function show(Comic $comic)
 {
-    return view('comic_details', compact('comic'));
+    return view('comic_details', compact('comic')); // views/comic_details.blade.php
 }
 ```
 
