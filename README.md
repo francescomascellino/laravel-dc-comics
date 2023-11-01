@@ -121,12 +121,19 @@ OTTIMIZZARE PER AGGIORNARE LE ROUTES IN CASO DI PROBLEMA:
 ```
 php artisan optimize
 ```
+AGGIUNGERE I RESOURCE CONTROLLERS NECESSARI A routes\web.php
+
+```php
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\User\PageController;
+```
 
 DA IL NOME 'comics' ALLE ROUTES DEFINITE TRAMITE User\PageController
 
 ```php
 Route::resource('comics', PageController::class);
 ```
+
 DA IL NOME 'admin' ALLE ROUTES DEFINITE TRAMITE User\AdminController
 
 ```php
@@ -134,7 +141,6 @@ Route::resource('admin', AdminController::class);
 ```
 
 QUESTO CI PERMETTE DI RIDIRIGERE I LINK ALLE VIEWS USANDO AD ESEMPIO:
-
 
 ```php
 href="{{ route('admin.create') }}" 
@@ -168,7 +174,9 @@ OPPURE:
 ```php
 href="{{ route('comics.show', $comic->id) }}"
 ```
+
 DEFINITA IN App\Http\Controllers\User\PageController COME:
+
 ```php
 public function show(Comic $comic)
 {
@@ -221,7 +229,7 @@ public function show(Comic $comic)
 }
 ```
 
-USARE UNA ROUTE PER COLLEGARE LA VISTA SHOW PASSANDO UN ARGOMENTO CHE CI SERVIRA' A VISUALIZZARE NEL DETTAGLIO L'ENTITA' DESIDERATA
+USARE UNA ROUTE PER COLLEGARE LA VISTA SHOW PASSANDO UN ARGOMENTO CHE CI SERVIRA' A VISUALIZZARE NEL DETTAGLIO L'ENTITA' DESIDERATA (L'id)
 
 ```php
 href="{{ route('comics.show', $comic->id) }}"
@@ -253,7 +261,9 @@ RICHIAMARE LA VISTA CONTENENTE IL FORM:
 ```
 
 NELLA VISTA 'admin.create' CREARE IL FORM USANDO COME METODO LA ROUTE .store() CHE AVRA' IL COMPITO DI GESTIRE I DATI DEL FORM.
+
 IL METODO DEVE ESSERE 'POST'.
+
 GLI ATTRIBUTI 'name' DEVONO COMBACIARE CON I NOMI DELLE COLONNE DEL DATABASE.
 
 @csrf E' UN TOKEN CHE GENERA LARAVEL PER ASSICURARSI CHE LA CHIAMATA POST AVVENDA TRAMITE UN FORM DEL SITO PER EVITARE INTRUSIONI DA PARTE DI TERZI
