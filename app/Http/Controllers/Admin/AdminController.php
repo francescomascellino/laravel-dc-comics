@@ -33,8 +33,6 @@ class AdminController extends Controller
     {
         $data = $request->all();
 
-
-
         $newComic = new Comic();
         $newComic->title = $data['title'];
         $newComic->price = $data['price'];
