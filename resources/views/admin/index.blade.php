@@ -37,8 +37,13 @@
 
                                     <td>{{ $comic->type }}</td>
 
-                                    <td><img class=" img-fluid" style="height: 100px" src="{{ $comic->thumb }}"
-                                            alt="{{ $comic->title }}"></td>
+                                    @if (str_contains($comic->thumb, 'http'))
+                                        <td><img class=" img-fluid" style="height: 100px" src="{{ $comic->thumb }}"
+                                                alt="{{ $comic->title }}"></td>
+                                    @else
+                                        <td><img class=" img-fluid" style="height: 100px"
+                                                src="{{ asset('storage/' . $comic->thumb) }}"></td>
+                                    @endif
 
                                 </tr>
                             @empty

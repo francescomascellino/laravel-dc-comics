@@ -300,3 +300,62 @@ public function store(Request $request)
     return view('admin.add'); // RIDIRIGE ALLA VISTA ORIGINALE (ALTRIMENTI SI RESTERA' FERMI SU UNA PAGINA VUOTA E AGGIORNANO VERRA' NUOVAMENTE INVIATOIL MODULO)
 }
 ```
+
+## FILE STORAGE - UPLOAD AN IMAGE
+
+MODIFICARE config/filestystems.php IN DA local in public.
+
+LA FUNZIONE env() VERIFICA SE NEL FILE .env E' PRESENTE UNA CHIAVE CON IL VALORE INDICATO NEL PRIMO PARAMETRO (FILESYSTEM_DISK). SE PRESENE UTILIZZA QUEL VALORE, ALTRIMENTI UTILIZZA IL VALORE PASSATO COME SECONDO PARAMETRO (public).
+
+```php
+'default' => env('FILESYSTEM_DISK', 'public'),
+```
+
+MODIFICARE LA STRINGA FILESYSTEM_DISK= DEL FILE .ev in public IN QUESTO MODO LARRAVEL DIRIGERA' AUTOMATICAMENTE I NOSTRI FILE CARICATI NELLA CARTELLA storage/app/public
+
+```php
+FILESYSTEM_DISK=public
+```
+COLLEGHIAMO LO STORAGE CHE COLLEGA ALLA CARTELLA storage/app/public DA TERMINALE
+
+```
+php artisan storage:link
+```
+
+CREIAMO IL FORM INDICANDO L'ATTRIBUTO enctype="multipart/form-data" IN MODO DA POTER INDICARE AL FORM LA PRESENZA DI FILES DI VCARIO FORMATO
+
+```php
+<form action="{{ route('admin.store') }}" method="POST" enctype="multipart/form-data">
+```
+
+NEL METODO store() DEL CONTROLLER INTERESSATO INVOCHIAMO IL METODO put() INDICANDO LA SOTTOCARTELLA DI DESTINAZIONE (comics_thumb IN QUESTO CASO) E ILç VALORE DA SALVARE ($request->thumb IN QUESTO CASO)
+
+```php
+public function store(Request $request)
+{
+    $data = $request->all();
+
+    $newComic = new Comic();
+
+    // CODICE
+
+    // SE $request HA UNA CHIAVE 'thumb', ALLORA:
+    if ($request->has('thumb')) {
+        // SALVA IL FILE NELLA CARTELLA storage/app/public/comics_thumbs
+        $file_path = Storage::put('comics_thumbs', $request->thumb);
+
+        // ASSEGNA IL FILE APPENA SALVATO AL VALORE DELLA CHIAVE thumb DEL NUOVO OGGETTO CHE STIAMO CREANDO
+        $newComic->thumb = $file_path;
+    }
+
+    $newComic->save(); // SALVA LA NUOVA ISTANZA NEL DATABASE
+
+    return view('admin.add'); // REINDERIZZA A UNA VIEW DESIDERATA
+    }
+```
+
+USIAMO LA FUNZIONE ASSET PER VISUALIZZARE IN UNA VIEW IL FILE CARICATO
+
+```php
+<img src="{{ asset('storage/' . $comic->thumb) }}">
+```
