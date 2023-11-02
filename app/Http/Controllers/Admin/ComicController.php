@@ -59,23 +59,40 @@ class ComicController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Comic $comic)
     {
-        //
+        return view('admin.edit', compact('comic'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Comic $comic)
     {
-        //
+        $data = $request->all();
+
+        // SE SIA LA REQUEST CHE L'ENTITA' CHE STIAMO EDITANDO HANNO UN thumb (CHIAVE DELL'IMMAGINE)
+        if ($request->has('thumb') && $comic->thumb) {
+
+            // VUOL DIRE CHE NELLO STORAGE E' PRESENTE UN'IMMAGINA DA ELIMINARE
+            Storage::delete($comic->thumb);
+
+            // LA NUOVA IMMAGINE VIENE SALVATA E IL SUO PERCORSO ASSEGNATO A $data
+            $newCover = $request->thumb;
+            $path = Storage::put('comics_thumbs', $newCover);
+            $data['thumb'] = $path;
+        }
+
+        // AGGIORNA L'ENTITA' CON I VALORI DI $data
+        $comic->update($data);
+        return to_route('comics.show', $comic); // new function to_route() laravel 9
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Comic $somic)
     {
         //
     }

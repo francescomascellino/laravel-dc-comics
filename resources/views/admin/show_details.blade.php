@@ -10,7 +10,13 @@
             <div class="col-8 py-5 position-relative">
 
                 <div class="col-2">
-                    <img src="{{ $comic->thumb }}" alt="{{ $comic->title }}" style="width: 100%">
+                    @if (str_contains($comic->thumb, 'http'))
+                        <td><img class=" img-fluid" style="height: 250px" src="{{ $comic->thumb }}" alt="{{ $comic->title }}">
+                        </td>
+                    @else
+                        <td><img class=" img-fluid" style="height: 250px" src="{{ asset('storage/' . $comic->thumb) }}">
+                        </td>
+                    @endif
                 </div>
 
                 <div class="row">

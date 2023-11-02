@@ -346,6 +346,14 @@ public function store(Request $request)
     return to_route('admin.index'); // REINDERIZZA A UNA VIEW DESIDERATA
     }
 ```
+AGGIUNGERE MASS ASSIGNEMENT
+    // ASSEGNA LA TABELLA COMICS
+    protected $table = "comics";
+
+    // ASSEGNA I CAMPI MODIFICABILI IN MASSA (MASS ASSIGNEMENT)
+    protected $fillable = ['title', 'price', 'series', 'thumb'];
+
+(CREATE) $newComic = Comic::create($data);
 
 USIAMO LA FUNZIONE ASSET PER VISUALIZZARE IN UNA VIEW IL FILE CARICATO
 
