@@ -359,13 +359,13 @@ COLLEGHIAMO LO STORAGE CHE COLLEGA ALLA CARTELLA storage/app/public DA TERMINALE
 php artisan storage:link
 ```
 
-CREIAMO IL FORM INDICANDO L'ATTRIBUTO enctype="multipart/form-data" IN MODO DA POTER INDICARE AL FORM LA PRESENZA DI FILES DI VCARIO FORMATO
+CREIAMO IL FORM INDICANDO L'ATTRIBUTO enctype="multipart/form-data" IN MODO DA POTER INDICARE AL FORM LA PRESENZA DI FILES DI VARIO FORMATO
 
 ```php
 <form action="{{ route('admin.store') }}" method="POST" enctype="multipart/form-data">
 ```
 
-NEL METODO store() DEL CONTROLLER INTERESSATO INVOCHIAMO IL METODO put() INDICANDO LA SOTTOCARTELLA DI DESTINAZIONE (comics_thumb IN QUESTO CASO) E ILç VALORE DA SALVARE ($request->thumb IN QUESTO CASO)
+NEL METODO store() DEL CONTROLLER INTERESSATO INVOCHIAMO IL METODO put() INDICANDO LA SOTTOCARTELLA DI DESTINAZIONE (comics_thumb IN QUESTO CASO) E IL VALORE DA SALVARE ($request->thumb IN QUESTO CASO)
 
 ```php
 public function store(Request $request)
@@ -422,7 +422,7 @@ public function store(Request $request)
     }
 
     // MASS ASSIGNMENT
-    $newComic = LightSaber::create($data);
+    $newComic = Comic::create($data);
 
     return to_route('admin.index');
 }
