@@ -108,8 +108,10 @@ php artisan migrate:fresh --seed
 ## CREARE UN RESOURCE CONTROLLER
 
 ```bash
-php artisan make:controller --resource User\PageController
+php artisan make:controller --resource Admin\ComicController
 ```
+
+CHE CREERA' UN RESOURCE CONTROLLE CON I METODI CRUF INTEGRATI (MA MANCANTI DI LOGICA) IN App\Http\Controllers\Admin\ComicController
 
 ## CONTROLLARE LA LISTA DELLE ROUTES
 
@@ -121,11 +123,17 @@ OTTIMIZZARE PER AGGIORNARE LE ROUTES IN CASO DI PROBLEMA:
 ```bash
 php artisan optimize
 ```
+O PULIRE LA CACHE DELLE ROUTES:
+
+```bash
+php artisan route:clear
+```
+
 AGGIUNGERE I RESOURCE CONTROLLERS NECESSARI A routes\web.php
 
 ```php
-use App\Http\Controllers\Admin\ComicController;
-use App\Http\Controllers\Guests\PageController;
+use App\Http\Controllers\Admin\ComicController; //RESOURCE CONTROLLER
+use App\Http\Controllers\Guests\PageController; // CONTROLLER NORMALE
 ```
 
 DA L'URi admin/comics ALLE ROUTES DEFINITE TRAMITE Admin\ComicController
@@ -134,24 +142,26 @@ DA L'URi admin/comics ALLE ROUTES DEFINITE TRAMITE Admin\ComicController
 Route::resource('admin/comics', ComicController::class);
 ```
 
+USIAMO LA URi admin/comics PERCHE' IN admin SICURAMENTE DOVREMO GESTIRE ALTRE VIEWS MENTRE IN admin/comics GESTIREMO IL DATABASE COMICS. ADMIN POTREBBE AVERE NUMEROSE VIEWS; COME AD ESEMPIO UNA IPOTETICA admin/users PER GESTIRE GLI UTENTI (CHE NECESSITERA' DI UN CONTROLLER DEDICATO)
+
 QUESTO CI PERMETTE DI RIDIRIGERE I LINK ALLE VIEWS USANDO AD ESEMPIO:
 
 ```php
-href="{{ route('comics.create') }}" 
+href="{{ route('comics.create') }}"  // URI http://[IP]:[PORTA]/admin/comics/create
 ```
 
-DEFINITA IN App\Http\Controllers\Admin\AdminController COME:
+DEFINITA IN App\Http\Controllers\Admin\ComicController COME:
 ```php
 public function create()
 {
-    return view('comics.add'); // views/admin/add.blade.php
+    return view('admin.add'); // views/admin/add.blade.php
 }
 ```
 
 OPPURE:
 
 ```php
-href="{{ route('comics.index') }}" 
+<a href="{{ route('comics.index') }}">Dashboard</a>
 ```
 
 DEFINITA IN App\Http\Controllers\Admin\AdminController COME:
@@ -166,10 +176,10 @@ public function index()
 OPPURE:
 
 ```php
-href="{{ route('comics.show', $comic->id) }}"
+<a href="{{ route('comics.show', $comic) }}">Details</a>
 ```
 
-DEFINITA IN App\Http\Controllers\User\PageController COME:
+DEFINITA IN App\Http\Controllers\Admin\AdminController COME:
 
 ```php
 public function show(Comic $comic)
@@ -182,6 +192,32 @@ INDICA CHE LA ROUTE '/' CORRISPONDE AL METODO 'welcome' DI Guests\PageController
 
 ```php
 Route::get('/', [PageController::class, 'welcome'])->name('comics');
+```
+
+PER VISUALIZZARE DALL CONTROLLER PER I GUESTS I DETTAGLI DI UNA SINGOLA ENTITA':
+
+DEFINIRE IL METODO IN IN App\Http\Controllers\Guets\PageController
+public function comic_details(Comic $comic)
+
+```php
+{
+    return view('comic_details', compact('comic'));
+}
+```
+DEFINIAMO LA ROUTE IN web.php
+
+```php
+Route::get('comic_details/{comic}', [PageController::class, 'comic_details'])->name('details');
+```
+
+CICLIAMO L'ARRAY PER STAMPARE IN PAGINA GLI ELEMENTI DESIDERATI E LINKIAMO LA ROUTE
+
+```php
+@foreach ($comics as $comic)
+<!-- CODICE -->
+<a href="{{ route('details', $comic) }}">
+<!-- CODICE -->
+@endforeach
 ```
 
 ## RESTFUL CRUD - INDEX. LEGGERE I details
@@ -198,16 +234,20 @@ DEFINIRE NEL CONTROLLER INTERESSATO IL METODO index():
 public function index()
 {
     $comics = Comic::all();
-    return view('welcome', compact('comics')); // welcome.blade.php
+    return view('admin.index', compact('comics'));
 }
 ```
 
 ORA E' POSSIBILE CICLARE $comics NELLA VISTA COLLEGATA ALLA ROUTE:
 
 ```php
-@foreach ($comics as $id => $comic)
-//CODICE
-@endforeach
+@forelse ($comics as $comic)
+// CODICE
+<p>{{ $comic->title }}</p>
+// CODICE
+@empty
+    <h1>Database is empty</h1>
+@endforelse
 ```
 
 ## SHOW CONTROLLER - LEGGERE UN'ENTITA' NEL DETTAGLIO
@@ -253,7 +293,7 @@ RICHIAMARE LA VISTA CONTENENTE IL FORM:
 <a class="btn btn-primary" href="{{ route('comics.create') }}">ADD ENTRY</a>
 ```
 
-NELLA VISTA 'admin.create' CREARE IL FORM USANDO COME METODO LA ROUTE .store() CHE AVRA' IL COMPITO DI GESTIRE I DATI DEL FORM.
+NELLA VISTA 'comics.create' CREARE IL FORM USANDO COME METODO LA ROUTE .store() CHE AVRA' IL COMPITO DI GESTIRE I DATI DEL FORM.
 
 IL METODO DEVE ESSERE 'POST'.
 
@@ -330,7 +370,8 @@ public function store(Request $request)
 
     $newComic = new Comic();
 
-    // CODICE
+    $newComic->title = $data['title'];
+    // CODICE...
 
     // SE $request HA UNA CHIAVE 'thumb', ALLORA:
     if ($request->has('thumb')) {
@@ -344,16 +385,46 @@ public function store(Request $request)
     $newComic->save(); // SALVA LA NUOVA ISTANZA NEL DATABASE
 
     return to_route('admin.index'); // REINDERIZZA A UNA VIEW DESIDERATA
-    }
+}
 ```
-AGGIUNGERE MASS ASSIGNEMENT
+
+### MASS ASSIGNMENT
+
+E' POSSIBILE ASSEGNARE IN MASSA I DATI INSERITI NEL FORM SENZA DOVERLI PRENDERE SINGOLARMENTE DALLA Request.
+
+MODIFICARE IL MODELLO IN App\Models (IN QUESTO CASO Comic.php)
+```php
+class Comic extends Model
+{
+    use HasFactory;
+
     // ASSEGNA LA TABELLA COMICS
     protected $table = "comics";
 
     // ASSEGNA I CAMPI MODIFICABILI IN MASSA (MASS ASSIGNEMENT)
     protected $fillable = ['title', 'price', 'series', 'thumb'];
+}
+```
 
-(CREATE) $newComic = Comic::create($data);
+SCRIVERE DIVERSAMENTE IL METODO store()
+
+```php
+public function store(Request $request)
+{
+    $data = $request->all();
+    if ($request->has('thumb')) {
+        $file_path = Storage::put('comics_thumbs', $request->thumb);
+        $newComic->thumb = $file_path;
+    }
+
+    // MASS ASSIGNMENT
+    $newComic = LightSaber::create($data);
+
+    return to_route('admin.index');
+}
+```
+
+### VISUALIZZARE LE IMMAGINI CARICATE
 
 USIAMO LA FUNZIONE ASSET PER VISUALIZZARE IN UNA VIEW IL FILE CARICATO
 
@@ -366,11 +437,83 @@ SE IL DATABASE CONTIENE SIA FILES CARICATI CHE LINK E' NECESSARIO INSERIRE DELLE
 ```php
 @if (str_contains($comic->thumb, 'http'))
 
-    <td><img class=" img-fluid" style="height: 100px" src="{{ $comic->thumb }}" alt="{{ $comic->title }}"></td>
+<img class=" img-fluid" src="{{ $comic->thumb }}" alt="{{ $comic->title }}">
 
 @else
 
-    <td><img class=" img-fluid" style="height: 100px" src="{{ asset('storage/' . $comic->thumb) }}"></td>
+<img class=" img-fluid"src="{{ asset('storage/' . $comic->thumb) }}">
 
 @endif
+```
+
+## CRUD - EDIT
+
+COLLEGARE LA VISTA AL METODO EDIT INDICANDO L'ISTANZA DEL MODELLO CHE NECESSITA DI MODIFICHE:
+
+```php
+public function edit(Comic $comic)
+{
+    return view('admin.edit', compact('comic'));
+}
+```
+
+CREARE IL COLLEGAMENTO ALLA VISTA CONTENENTE IL FORM
+
+```php
+<a href="{{ route('comics.edit', $comic) }}">Edit</a>
+```
+
+INSERIRE IL FORM IN PAGINA, AGGIUNGENDO IL TOKEN @method('PUT') PER MODIFICARE IL METODO DEL FORM IN MODO CHE USI IL CONTROLLER.
+
+DARE COME ACTION IL METODO UPDATE DEL CONTROLLER (action="{{ route('comics.update', $comic) }}")
+
+INSERIRE I VARI CAMPI DA MODIFICARE IN MASSA ASSEGNATI NEL MODELLO (VEDI SOPRA)
+
+DARE AI VARI CAMPI L'ATTRIBUTO value ORIGINALE IN MODO DA AVERE SOTT'OCCHIO COSA STIAMO MODIFICANDO (ES: value="{{ $comic->title }}")
+
+```php
+<form action="{{ route('comics.update', $comic) }}" method="POST" enctype="multipart/form-data">
+
+    @csrf
+    
+    @method('PUT') // EDITA IL METODO DEL FORM ASSEGNANDO IL METODO put() DEL CONTROLLER
+
+    <div class="mb-3">
+
+        <label for="title" class="form-label"><strong>Titolo</strong></label>
+
+        <input type="text" class="form-control" name="title" id="title"  aria-describedby="helpTitle" value="{{ $comic->title }}">
+    </div>
+
+    // CODICE
+
+    <button type="submit" class="btn btn-success my-3">SAVE</button>
+
+</form>
+```
+
+DEFINIRE IL METODO UPDATE
+
+```php
+public function update(Request $request, Comic $comic)
+{
+    $data = $request->all();
+
+    // SE SIA LA REQUEST CHE L'ENTITA' CHE STIAMO EDITANDO HANNO UN thumb (CHIAVE DELL'IMMAGINE)
+    if ($request->has('thumb') && $comic->thumb) {
+
+    // VUOL DIRE CHE NELLO STORAGE E' PRESENTE UN'IMMAGINE DA ELIMINARE
+    Storage::delete($comic->thumb);
+
+    // LA NUOVA IMMAGINE VIENE SALVATA E IL SUO PERCORSO ASSEGNATO A $data
+    $newCover = $request->thumb;
+    $path = Storage::put('comics_thumbs', $newCover);
+    $data['thumb'] = $path;
+    }
+
+    // AGGIORNA L'ENTITA' CON I VALORI DI $data
+    $comic->update($data);
+    return to_route('comics.show', $comic); // RIDIRIGE ALLA VISTA DEL DETTAGLIO DELL'ELEMENTO APPENA MODIFICATO
+
+    }
 ```

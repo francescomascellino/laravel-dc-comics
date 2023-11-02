@@ -74,7 +74,7 @@ class ComicController extends Controller
         // SE SIA LA REQUEST CHE L'ENTITA' CHE STIAMO EDITANDO HANNO UN thumb (CHIAVE DELL'IMMAGINE)
         if ($request->has('thumb') && $comic->thumb) {
 
-            // VUOL DIRE CHE NELLO STORAGE E' PRESENTE UN'IMMAGINA DA ELIMINARE
+            // VUOL DIRE CHE NELLO STORAGE E' PRESENTE UN'IMMAGINE DA ELIMINARE
             Storage::delete($comic->thumb);
 
             // LA NUOVA IMMAGINE VIENE SALVATA E IL SUO PERCORSO ASSEGNATO A $data
@@ -85,8 +85,7 @@ class ComicController extends Controller
 
         // AGGIORNA L'ENTITA' CON I VALORI DI $data
         $comic->update($data);
-        return to_route('comics.show', $comic); // new function to_route() laravel 9
-
+        return to_route('comics.show', $comic);
     }
 
     /**
