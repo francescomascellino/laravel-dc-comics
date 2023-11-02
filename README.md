@@ -111,7 +111,7 @@ php artisan migrate:fresh --seed
 php artisan make:controller --resource Admin\ComicController
 ```
 
-CHE CREERA' UN RESOURCE CONTROLLE CON I METODI CRUF INTEGRATI (MA MANCANTI DI LOGICA) IN App\Http\Controllers\Admin\ComicController
+CHE CREERA' UN RESOURCE CONTROLLE CON I METODI CRUD INTEGRATI (MA MANCANTI DI LOGICA) IN App\Http\Controllers\Admin\ComicController
 
 ## CONTROLLARE LA LISTA DELLE ROUTES
 
@@ -151,6 +151,7 @@ href="{{ route('comics.create') }}"  // URI http://[IP]:[PORTA]/admin/comics/cre
 ```
 
 DEFINITA IN App\Http\Controllers\Admin\ComicController COME:
+
 ```php
 public function create()
 {
@@ -164,7 +165,8 @@ OPPURE:
 <a href="{{ route('comics.index') }}">Dashboard</a>
 ```
 
-DEFINITA IN App\Http\Controllers\Admin\AdminController COME:
+DEFINITA IN App\Http\Controllers\Admin\ComicController COME:
+
 ```php
 public function index()
 {
@@ -179,7 +181,7 @@ OPPURE:
 <a href="{{ route('comics.show', $comic) }}">Details</a>
 ```
 
-DEFINITA IN App\Http\Controllers\Admin\AdminController COME:
+DEFINITA IN App\Http\Controllers\Admin\ComicController COME:
 
 ```php
 public function show(Comic $comic)
@@ -196,10 +198,10 @@ Route::get('/', [PageController::class, 'welcome'])->name('comics');
 
 PER VISUALIZZARE DALL CONTROLLER PER I GUESTS I DETTAGLI DI UNA SINGOLA ENTITA':
 
-DEFINIRE IL METODO IN IN App\Http\Controllers\Guets\PageController
-public function comic_details(Comic $comic)
+DEFINIRE IL METODO IN IN App\Http\Controllers\Guests\PageController
 
 ```php
+public function comic_details(Comic $comic)
 {
     return view('comic_details', compact('comic'));
 }
@@ -262,7 +264,7 @@ public function show(Comic $comic)
 }
 ```
 
-USARE UNA ROUTE PER COLLEGARE LA VISTA SHOW PASSANDO UN ARGOMENTO CHE CI SERVIRA' A VISUALIZZARE NEL DETTAGLIO L'ENTITA' DESIDERATA (L'id)
+USARE UNA ROUTE PER COLLEGARE LA VISTA SHOW PASSANDO UN ARGOMENTO CHE CI SERVIRA' A VISUALIZZARE NEL DETTAGLIO L'ENTITA' DESIDERATA
 
 ```php
 href="{{ route('comics.show', $comic) }}"
