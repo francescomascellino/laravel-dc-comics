@@ -65,7 +65,7 @@
 
                         </div>
 
-                        <button type="submit" class="btn btn-success my-3">SAVE</button>
+                        <button type="submit" class="btn btn-success my-3">SAVE</button> <a class="btn btn-primary my-2" href="{{ route('comics.index') }}">Back to Dashboard</a>
 
                     </form>
 

@@ -31,6 +31,8 @@
 
                         <p><strong>Writers: </strong>{{ $comic->writers }}</p>
 
+                        <a class="btn btn-primary" href="{{ route('comics.index') }}">Back to Dashboard</a>
+
                     </div>
 
                     <div class="col">
