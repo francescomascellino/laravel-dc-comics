@@ -328,6 +328,10 @@ public function store(Request $request)
 
     $newComic = new Comic();
 
+    $newComic->title = $data['title'];
+
+    // CODICE
+
     $newComic->save(); // SALVA IL NUOVO OGGETTO NEL DATABASE
 
     return to_route('admin.index'); // RIDIRIGE ALLA VISTA ORIGINALE (ALTRIMENTI SI RESTERA' FERMI SU UNA PAGINA VUOTA E AGGIORNANO VERRA' NUOVAMENTE INVIATOIL MODULO)
