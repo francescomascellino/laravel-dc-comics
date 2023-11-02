@@ -23,7 +23,7 @@
                     <input type="search" id="dc-search" class="form-control" placeholder="Search...">
                     <i class="fa fa-search align-self-center"></i>
                 </div> --}}
-                <a class="btn btn-success" href="{{ route('admin.index') }}">ADMIN</a>
+                <a class="btn btn-success" href="{{ route('comics.index') }}">ADMIN</a>
             </div>
 
         </nav>

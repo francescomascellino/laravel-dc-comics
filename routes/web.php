@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\User\PageController;
+use App\Http\Controllers\Admin\ComicController;
+use App\Http\Controllers\Guests\PageController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -16,28 +16,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// DA IL NOME 'comics' ALLE ROUTES DEFINITE TRAMITE User\PageController
-Route::resource('comics', PageController::class);
+// DA L'URi admin/comics ALLE ROUTES DEFINITE TRAMITE Admin\ComicController
+Route::resource('admin/comics', ComicController::class);
+// UNA RISORSA CI PERMETTE DI DIRIGERE I LINK USANDO AD ESEMPIO: href="{{ route('comics.create') }}", href="{{ route('comics.index') }}" OPPURE  href="{{ route('comics.show', $comic->id) }}"
 
-// DA IL NOME 'admin' ALLE ROUTES DEFINITE TRAMITE User\AdminController
-Route::resource('admin', AdminController::class);
-//QUESTO CI PERMETTE DI RIDIRIGERE I LINK USANDO AD ESEMPIO: href="{{ route('admin.create') }}", href="{{ route('admin.index') }}" OPPURE  href="{{ route('comics.show', $comic->id) }}"
+// USANDO UN VALORE PASSATO NELLA ROUTE E' POSSIBILE CREARE PAGINE DINAMICHE SE IL VALORE CORRISPONDE A UN ELEMENTO DI UN ARRAY.
+// IN QUESTO CASO CREIAMO UNA ROUTE /comic_detail/{COMIC} (vedi PageController METODO comic_details)
+// https://laravel.com/docs/10.x/routing#generating-urls-to-named-routes
+Route::get('comic_details/{comic}', [PageController::class, 'comic_details'])->name('details');
 
-// INDICA CHE LA ROUTE '/' CORRISPONDE AL METODO 'index' DI User\PageController
-// SE PageController FOSSE SOSTITUITO CON AdminController LA PAGINA INIZIALE SAREBBE LA DASHBOARD DELL'ADMIN CON LA TABELLA
-Route::get('/', [PageController::class, 'index'])->name('comics');
+// ROUTES NAVBAR
 
-/*  */
+Route::get('/', [PageController::class, 'welcome'])->name('comics');
 
 // ORIGINAL
 /* Route::get('/characters', function () {
     return view('characters');
 })->name('characters'); */
 
-// ROUTE CHARACTERS USING PAGE CONTROLLER. INDICA CHE LA ROUTE VIENE GESTITA DAL METODO characters IN User\PageController CHE RESTITUISCE LA VIEW 'character' (characters.blade.php)
+// ROUTE CHARACTERS USING PAGE CONTROLLER. INDICA CHE LA ROUTE VIENE GESTITA DAL METODO characters IN Guests\PageController CHE RESTITUISCE LA VIEW 'character' (characters.blade.php)
 Route::get('/characters', [PageController::class, 'characters'])->name('characters');
 
-// OLD NAVBAR ROUTES
+// OLD NAVBAR ROUTES DA INSERIIRE NEL CONTROLLER
 Route::get('/movies', function () {
     return view('movies');
 })->name('movies');

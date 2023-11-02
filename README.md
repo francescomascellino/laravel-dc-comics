@@ -71,13 +71,13 @@ class ComicsTableSeeder extends Seeder
 
 ## ESEGUIRE LA MIGRAZIONE
 
-```
+```bash
 php artisan migrate
 ```
 
 ## ESEGUIRE IL SEEDING
 
-```
+```bash
 php artisan db:seed --class=ComicTableSeder
 ```
 OPPURE PER DROPPARE E RIPOPOLARE IL DATABASE ALLO STESSO MOMENTO:
@@ -101,63 +101,57 @@ public function run(): void
 
 ESEGUIRE:
 
-```
+```bash
 php artisan migrate:fresh --seed
 ```
 
 ## CREARE UN RESOURCE CONTROLLER
 
-```
+```bash
 php artisan make:controller --resource User\PageController
 ```
 
 ## CONTROLLARE LA LISTA DELLE ROUTES
 
-```
+```bash
 php artisan route:list
 ```
 OTTIMIZZARE PER AGGIORNARE LE ROUTES IN CASO DI PROBLEMA:
 
-```
+```bash
 php artisan optimize
 ```
 AGGIUNGERE I RESOURCE CONTROLLERS NECESSARI A routes\web.php
 
 ```php
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\User\PageController;
+use App\Http\Controllers\Admin\ComicController;
+use App\Http\Controllers\Guests\PageController;
 ```
 
-DA IL NOME 'comics' ALLE ROUTES DEFINITE TRAMITE User\PageController
+DA L'URi admin/comics ALLE ROUTES DEFINITE TRAMITE Admin\ComicController
 
 ```php
-Route::resource('comics', PageController::class);
-```
-
-DA IL NOME 'admin' ALLE ROUTES DEFINITE TRAMITE User\AdminController
-
-```php
-Route::resource('admin', AdminController::class);
+Route::resource('admin/comics', ComicController::class);
 ```
 
 QUESTO CI PERMETTE DI RIDIRIGERE I LINK ALLE VIEWS USANDO AD ESEMPIO:
 
 ```php
-href="{{ route('admin.create') }}" 
+href="{{ route('comics.create') }}" 
 ```
 
 DEFINITA IN App\Http\Controllers\Admin\AdminController COME:
 ```php
 public function create()
 {
-    return view('admin.add'); // views/admin/add.blade.php
+    return view('comics.add'); // views/admin/add.blade.php
 }
 ```
 
 OPPURE:
 
 ```php
-href="{{ route('admin.index') }}" 
+href="{{ route('comics.index') }}" 
 ```
 
 DEFINITA IN App\Http\Controllers\Admin\AdminController COME:
@@ -180,15 +174,14 @@ DEFINITA IN App\Http\Controllers\User\PageController COME:
 ```php
 public function show(Comic $comic)
 {
-    return view('comic_details', compact('comic')); // views/comic_details.blade.php
+    return view('admin.show_details', compact('comic')); // views/admin/admin.show_details.blade.php
 }
 ```
 
-INDICA CHE LA ROUTE '/' CORRISPONDE AL METODO 'index' DI User\PageController
-(SE PageController FOSSE SOSTITUITO CON AdminController LA PAGINA INIZIALE SAREBBE LA DASHBOARD DELL'ADMIN CON LA TABELLA)
+INDICA CHE LA ROUTE '/' CORRISPONDE AL METODO 'welcome' DI Guests\PageController
 
 ```php
-Route::get('/', [PageController::class, 'index'])->name('comics');
+Route::get('/', [PageController::class, 'welcome'])->name('comics');
 ```
 
 ## RESTFUL CRUD - INDEX. LEGGERE I details
@@ -225,14 +218,14 @@ DEFINIRE NEL CONTROLLER INTERESSATO IL METODO show():
 // $comic E' UNA ISTANZA DEL MODELLO Comic
 public function show(Comic $comic)
 {
-    return view('comic_details', compact('comic')); // views/comic_details.blade.php
+    return view('admin.show_details', compact('comic')); // views/admin/admin.show_details.blade.php
 }
 ```
 
 USARE UNA ROUTE PER COLLEGARE LA VISTA SHOW PASSANDO UN ARGOMENTO CHE CI SERVIRA' A VISUALIZZARE NEL DETTAGLIO L'ENTITA' DESIDERATA (L'id)
 
 ```php
-href="{{ route('comics.show', $comic->id) }}"
+href="{{ route('comics.show', $comic) }}"
 ```
 
 VISUALIZZARE NELLA PAGINA DELLA VISTA COLLEGATA ALLA ROUTE I DETTAGLI DESIDERATI:
@@ -257,7 +250,7 @@ public function create()
 RICHIAMARE LA VISTA CONTENENTE IL FORM:
 
 ```php
-<a class="btn btn-primary" href="{{ route('admin.create') }}">ADD ENTRY</a>
+<a class="btn btn-primary" href="{{ route('comics.create') }}">ADD ENTRY</a>
 ```
 
 NELLA VISTA 'admin.create' CREARE IL FORM USANDO COME METODO LA ROUTE .store() CHE AVRA' IL COMPITO DI GESTIRE I DATI DEL FORM.
@@ -270,7 +263,7 @@ GLI ATTRIBUTI 'name' DEVONO COMBACIARE CON I NOMI DELLE COLONNE DEL DATABASE.
 
 
 ```php
-<form action="{{ route('admin.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('comics.store') }}" method="POST" enctype="multipart/form-data">
 
 @csrf // IMPORTANTE
 
@@ -297,7 +290,7 @@ public function store(Request $request)
 
     $newComic->save(); // SALVA IL NUOVO OGGETTO NEL DATABASE
 
-    return view('admin.add'); // RIDIRIGE ALLA VISTA ORIGINALE (ALTRIMENTI SI RESTERA' FERMI SU UNA PAGINA VUOTA E AGGIORNANO VERRA' NUOVAMENTE INVIATOIL MODULO)
+    return to_route('admin.index'); // RIDIRIGE ALLA VISTA ORIGINALE (ALTRIMENTI SI RESTERA' FERMI SU UNA PAGINA VUOTA E AGGIORNANO VERRA' NUOVAMENTE INVIATOIL MODULO)
 }
 ```
 
@@ -318,7 +311,7 @@ FILESYSTEM_DISK=public
 ```
 COLLEGHIAMO LO STORAGE CHE COLLEGA ALLA CARTELLA storage/app/public DA TERMINALE
 
-```
+```bash
 php artisan storage:link
 ```
 
@@ -350,7 +343,7 @@ public function store(Request $request)
 
     $newComic->save(); // SALVA LA NUOVA ISTANZA NEL DATABASE
 
-    return view('admin.add'); // REINDERIZZA A UNA VIEW DESIDERATA
+    return to_route('admin.index'); // REINDERIZZA A UNA VIEW DESIDERATA
     }
 ```
 
@@ -358,4 +351,18 @@ USIAMO LA FUNZIONE ASSET PER VISUALIZZARE IN UNA VIEW IL FILE CARICATO
 
 ```php
 <img src="{{ asset('storage/' . $comic->thumb) }}">
+```
+
+SE IL DATABASE CONTIENE SIA FILES CARICATI CHE LINK E' NECESSARIO INSERIRE DELLE CONDIZIONI:
+
+```php
+@if (str_contains($comic->thumb, 'http'))
+
+    <td><img class=" img-fluid" style="height: 100px" src="{{ $comic->thumb }}" alt="{{ $comic->title }}"></td>
+
+@else
+
+    <td><img class=" img-fluid" style="height: 100px" src="{{ asset('storage/' . $comic->thumb) }}"></td>
+
+@endif
 ```

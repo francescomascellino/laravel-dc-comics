@@ -27,7 +27,7 @@
                                 <tr class="">
                                     <td scope="row">{{ $comic->id }}</td>
 
-                                    <td>{{ $comic->title }}</td>
+                                    <td>{{ $comic->title }} - <a href="{{ route('comics.show', $comic) }}">Details</a></td>
 
                                     <td>{{ $comic->price }}</td>
 
@@ -54,7 +54,7 @@
                     </table>
                 </div>
 
-                <a class="btn btn-primary" href="{{ route('admin.create') }}">ADD ENTRY</a>
+                <a class="btn btn-primary" href="{{ route('comics.create') }}">ADD ENTRY</a>
 
             </div>
 

@@ -7,7 +7,7 @@ use App\Models\Comic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class AdminController extends Controller
+class ComicController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -45,7 +45,7 @@ class AdminController extends Controller
 
         $newComic->save();
 
-        return view('admin.add');
+        return to_route('admin.index');
     }
 
     /**
@@ -53,7 +53,7 @@ class AdminController extends Controller
      */
     public function show(Comic $comic)
     {
-        return view('comic_details', compact('comic'));
+        return view('admin.show_details', compact('comic'));
     }
 
     /**

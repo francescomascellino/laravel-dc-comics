@@ -11,7 +11,7 @@
 
                 <div class="bg-light-subtle p-3 rounded rounded-3">
 
-                    <form action="{{ route('admin.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('comics.store') }}" method="POST" enctype="multipart/form-data">
 
                         @csrf
 
