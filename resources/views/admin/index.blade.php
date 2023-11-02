@@ -26,26 +26,30 @@
                         <tbody>
                             @forelse ($comics as $comic)
                                 <tr class="">
-                                    <td scope="row">{{ $comic->id }}</td>
+                                    <td class="align-middle" scope="row">{{ $comic->id }}</td>
 
-                                    <td>{{ $comic->title }} - <a href="{{ route('comics.show', $comic) }}">Details</a></td>
+                                    <td class="align-middle">{{ $comic->title }} - <a
+                                            href="{{ route('comics.show', $comic) }}">Details</a></td>
 
-                                    <td>{{ $comic->price }}</td>
+                                    <td class="align-middle">{{ $comic->price }}</td>
 
-                                    <td>{{ $comic->series }}</td>
+                                    <td class="align-middle">{{ $comic->series }}</td>
 
-                                    <td>{{ $comic->sale_date }}</td>
+                                    <td class="align-middle">{{ $comic->sale_date }}</td>
 
-                                    <td>{{ $comic->type }}</td>
+                                    <td class="align-middle">{{ $comic->type }}</td>
 
                                     @if (str_contains($comic->thumb, 'http'))
-                                        <td><img class=" img-fluid" style="height: 100px" src="{{ $comic->thumb }}"
-                                                alt="{{ $comic->title }}"></td>
+                                        <td class="text-center align-middle"><img class="img-fluid" style="height: 100px"
+                                                src="{{ $comic->thumb }}" alt="{{ $comic->title }}"></td>
                                     @else
-                                        <td><img class=" img-fluid" style="height: 100px"
+                                        <td class="text-center align-middle"><img class="img-fluid" style="height: 100px"
                                                 src="{{ asset('storage/' . $comic->thumb) }}"></td>
                                     @endif
-                                    <td><a class="btn btn-warning m-2" href="{{ route('comics.edit', $comic) }}">Edit</a> <a class="btn btn-danger m-2" href="{{ route('comics.edit', $comic) }}">Delete</a></td>
+                                    <td class="align-middle"><a class="btn btn-warning m-2"
+                                            href="{{ route('comics.edit', $comic) }}">Edit</a>
+                                        <a class="btn btn-danger m-2" href="{{ route('comics.edit', $comic) }}">Delete</a>
+                                    </td>
                                 </tr>
                             @empty
                                 <h1>Database is empty</h1>
