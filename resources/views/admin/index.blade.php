@@ -20,6 +20,7 @@
                                 <th scope="col">IN VENDITA DAL</th>
                                 <th scope="col">TIPO</th>
                                 <th scope="col">THUMB</th>
+                                <th scope="col">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,7 +45,7 @@
                                         <td><img class=" img-fluid" style="height: 100px"
                                                 src="{{ asset('storage/' . $comic->thumb) }}"></td>
                                     @endif
-
+                                    <td><a class="btn btn-warning m-2" href="{{ route('comics.edit', $comic) }}">Edit</a> <a class="btn btn-danger m-2" href="{{ route('comics.edit', $comic) }}">Delete</a></td>
                                 </tr>
                             @empty
                                 <h1>Database is empty</h1>

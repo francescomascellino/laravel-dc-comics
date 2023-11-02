@@ -18,15 +18,15 @@ public function up(): void
 
     $table->string('title');
     $table->longText('description')->nullable();
-        $table->longText('thumb')->nullable();
-        $table->tinyText('price');
-        $table->string('series')->nullable();
-        $table->date('sale_date')->nullable();
-        $table->string('type')->nullable();
-        $table->text('artists')->nullable();
-        $table->text('writers')->nullable();
+    $table->longText('thumb')->nullable();
+    $table->tinyText('price');
+    $table->string('series')->nullable();
+    $table->date('sale_date')->nullable();
+    $table->string('type')->nullable();
+    $table->text('artists')->nullable();
+    $table->text('writers')->nullable();
 
-        $table->timestamps();
+    $table->timestamps();
     });
 }
 ```
