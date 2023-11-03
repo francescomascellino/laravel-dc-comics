@@ -1,8 +1,26 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<a href="#creare-un-nuovo-progetto" target="_blank">CREARE UN NUOVO PROGETTO</a>
-
 # CRUD
+
+## INDICE
+
+- <a href="#creare-un-nuovo-progetto" target="_blank">CREARE UN NUOVO PROGETTO</a>
+- <a href="#create-app-layouts" target="_blank">CREARE LAOUT DELL'APP</a>
+- <a href="#creare-una-migration-e-un-seeder-per-popolare-il-data" target="_blank">CREARE UNA MIGRATION E UN SEEDER PER POPOLARE IL DATABASE</a>
+- <a href="#eseguire-la-migrazione" target="_blank">ESEGUIRE MIGRATION E SEEDING</a>
+- <a href="#creare-un-resource-controller" target="_blank">CREARE UN RESOURCE CONTROLLER</a>
+- <a href="#restful-crud---index-leggere-i-details" target="_blank">CRUD - INDEX</a>
+- <a href="#show-controller---leggere-unentita-nel-dettaglio" target="_blank">CRUD - SHOW</a>
+- <a href="#restful-crud---create-creare-una-nuova-voce-nel-database" target="_blank">CRUD - CREATE</a>
+- <a href="#file-storage---upload-an-image" target="_blank">CARICARE UN'IMMAGINE/SYSTEM STORAGE</a>
+- <a href="#mass-assignmente" target="_blank">MASS ASSIGNMENT</a>
+- <a href="#visualizzare-le-immagini-caricate" target="_blank">VISUALIZZARE LE IMMAGINI CARICATE</a>
+- <a href="#crud---edit" target="_blank">CRUD - EDIT</a>
+- <a href="#crud---destroy" target="_blank">CRUD - DESTROY</a>
+
+- <a href="https://github.com/fabiopacifici/104_laravel_lightsabers/blob/444355619943da593f9d68027d232c7e70afb32e/README.md" target="_blank">Step by Step Guide by fabiopacifici</a>
+
+
 
 ## CREARE UN NUOVO PROGETTO: 
 https://github.com/francescomascellino/laravel-primi-passi#readme
@@ -180,7 +198,7 @@ php artisan migrate:fresh --seed
 php artisan make:controller --resource Admin\ComicController
 ```
 
-CHE CREERA' UN RESOURCE CONTROLLE CON I METODI CRUD INTEGRATI (MA MANCANTI DI LOGICA) IN App\Http\Controllers\Admin\ComicController
+CHE CREERA' UN RESOURCE CONTROLLER CON I METODI CRUD INTEGRATI (MA MANCANTI DI LOGICA) IN App\Http\Controllers\Admin\ComicController
 
 OPPURE PER CREARE UN RESOURCE CONTROLLER GIA' ASSOCIATO A UN MODELLO:
 
