@@ -7,6 +7,8 @@
 
             <div class="col-8 py-5">
 
+                @include('partials.admin_alert')
+
                 <h1 class="text-center">ADMIN DATABASE</h1>
 
                 <div class="table-responsive rounded rounded-3">
@@ -46,9 +48,55 @@
                                         <td class="text-center align-middle"><img class="img-fluid" style="height: 100px"
                                                 src="{{ asset('storage/' . $comic->thumb) }}"></td>
                                     @endif
-                                    <td class="align-middle"><a class="btn btn-warning m-2"
-                                            href="{{ route('comics.edit', $comic) }}">Edit</a>
-                                        <a class="btn btn-danger m-2" href="{{ route('comics.edit', $comic) }}">Delete</a>
+                                    <td class="align-middle">
+
+                                        {{-- EDIT --}}
+                                        <a class="btn btn-warning m-2" href="{{ route('comics.edit', $comic) }}">Edit</a>
+
+                                        {{-- DELETE --}}
+                                        <!-- Modal trigger button -->
+                                        <button type="button" class="btn btn-danger m-2" data-bs-toggle="modal"
+                                            data-bs-target="#modalComic{{ $comic->id }}">
+                                            Delete
+                                        </button>
+
+                                        <!-- Modal Body -->
+                                        <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+                                        <div class="modal fade" id="modalComic{{ $comic->id }}" tabindex="-1"
+                                            data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+                                            aria-labelledby="modalTitleId" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered"
+                                                role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title text-muted" id="modalTitleId">DELETE COMIC ID
+                                                            {{ $comic->id }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <p>Do you want to delete "{{$comic->title}}"?</p>
+
+                                                        <p>This operation is not reversible!</p>
+                                                        
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-success"
+                                                            data-bs-dismiss="modal">Cancel</button>
+
+                                                        <form action="{{ route('comics.destroy', $comic) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="btn btn-danger m-2"
+                                                                type="submit">DELETE</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </td>
                                 </tr>
                             @empty

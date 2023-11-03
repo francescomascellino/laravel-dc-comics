@@ -3,6 +3,13 @@
 @section('content')
     <div class="container-fluid">
 
+        <div class="row justify-content-center my-3">
+            <div class="col-8">
+                @include('partials.admin_alert')
+            </div>
+
+        </div>
+
         <div class="row justify-content-center">
 
             <h1 class="text-muted text-center my-3">ADMIN COMIC DETAILS PAGE</h1>
@@ -25,11 +32,15 @@
 
                         <h2 class="text-uppercase fw-bold text-dark">{{ $comic->title }}</h2>
 
+                        <p><strong>Serie: </strong>{{ $comic->series }}</p>
+
                         <p><strong>Description: </strong>{{ $comic->description }}</p>
 
                         <p><strong>Artists: </strong>{{ $comic->artists }}</p>
 
                         <p><strong>Writers: </strong>{{ $comic->writers }}</p>
+
+                        <p><strong>Price: </strong>{{ $comic->price }}</p>
 
                         <a class="btn btn-primary" href="{{ route('comics.index') }}">Back to Dashboard</a>
 

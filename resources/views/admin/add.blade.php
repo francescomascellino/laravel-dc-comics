@@ -20,7 +20,7 @@
                             <label for="title" class="form-label"><strong>Titolo</strong></label>
 
                             <input type="text" class="form-control" name="title" id="title"
-                                aria-describedby="helpTitle" placeholder="Inserisci il titolo del prodotto">
+                                aria-describedby="helpTitle" placeholder="Inserisci il titolo del prodotto" required>
                         </div>
 
                         <div class="mb-3">
@@ -28,7 +28,7 @@
                             <label for="price" class="form-label"><strong>Prezzo</strong></label>
 
                             <input type="text" class="form-control" name="price" id="price"
-                                aria-describedby="helpprice" placeholder="Inserisci il prezzo del prodotto">
+                                aria-describedby="helpprice" placeholder="Inserisci il prezzo del prodotto" required>
 
                         </div>
 
@@ -51,7 +51,8 @@
 
                         </div>
 
-                        <button type="submit" class="btn btn-success my-3">EDIT</button> <a class="btn btn-primary m-3 " href="{{ route('comics.index') }}">Back to Dashboard</a>
+                        <button type="submit" class="btn btn-success my-3">SAVE</button> <a class="btn btn-primary m-3 "
+                            href="{{ route('comics.index') }}">Back to Dashboard</a>
 
                     </form>
 

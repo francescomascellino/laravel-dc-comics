@@ -45,7 +45,7 @@ class ComicController extends Controller
 
         $newComic->save();
 
-        return to_route('admin.index');
+        return to_route('comics.index')->with('message', 'Well Done, New Entry Added Succeffully');
     }
 
     /**
@@ -85,14 +85,23 @@ class ComicController extends Controller
 
         // AGGIORNA L'ENTITA' CON I VALORI DI $data
         $comic->update($data);
-        return to_route('comics.show', $comic);
+        return to_route('comics.show', $comic)->with('message', 'Well Done, Element Edited Succeffully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comic $somic)
+    public function destroy(Comic $comic)
     {
-        //
+        // CONTROLLA SE L'ISTANZA HA UN FILE DI ANTEPRIMA. SE SI LO ELIMINA DAL filesystem
+        if(!is_null($comic->thumb)) {
+            Storage::delete($comic->thumb);
+        }
+    
+        // ELIMINA IL RECORD DAL DATABASE
+        $comic->delete();
+
+        // RIDIRIGE AD UNA ROTTA DESIDERATA CON UN MESSAGGIO
+        return to_route('comics.index')->with('message', 'Well Done, Element Deleted Succeffully');
     }
 }

@@ -1,12 +1,81 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
+<a href="https://laravel.com" target="_blank"></a>
+
 # CRUD
 
 ## CREARE UN NUOVO PROGETTO: 
 https://github.com/francescomascellino/laravel-primi-passi#readme
 
+```bash
+laravel new [FOLDER NAME] --git
+```
+
+INSTALLARE IL PRESET DI LARAVEL
+
+```bash
+composer require pacificdev/laravel_9_preset
+```
+
+```bash
+php artisan preset:ui bootstrap
+```
+
+RIMUOVERE LA RIGA `type": "module` DAL FILE ***package.json*** OPPURE RINOMINARE IL FILE `vite.config.js` file IN `vite.config.cjs`
+
+INSTALLARE I PACCHETTI:
+
+```bash
+npm i
+```
+
+AVVIARE I SERVER SU DUE TERMINALI DIVERSI
+
+```bash
+npm run dev
+```
+
+```bash
+php artisan serve
+```
+
+## Create App Layouts
+
+- add an app.blade.php layout file for guests
+- add an admin.blade.php layout file for admin users
+
+Copy the welcome.blade.php file and place inside a folder called /layouts
+
+```text
+
+/layouts
+ - app.blade.php
+ - admin.blade.php
+
+```
+
+Remember to user the blade `@yield('content')` directive to add the placeholders for your pages contents.
+And add also a yield for the page title `@yield('page-title', 'can accept a default value')`.
+
 ## CREARE UNA MIGRATION E UN SEEDER PER POPOLARE IL DATABASE:
 https://github.com/francescomascellino/laravel-migration-seeder#readme
+
+EDITARE IL FLE .env
+
+```php
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=[MAMP SQL PORT] <---
+DB_DATABASE=[DATABASE NAME] <---
+DB_USERNAME=root
+DB_PASSWORD=[PASSWORD] <---
+```
+
+CREARE UN MODEL/MIGRATION/SEEDER CON UN UNICO COMANDO (ms = mIGRATIONsEEDER)
+
+```bash
+php artisan make:model Comic -ms
+```
 
 MIGRATION: 
 
@@ -113,6 +182,12 @@ php artisan make:controller --resource Admin\ComicController
 
 CHE CREERA' UN RESOURCE CONTROLLE CON I METODI CRUD INTEGRATI (MA MANCANTI DI LOGICA) IN App\Http\Controllers\Admin\ComicController
 
+OPPURE PER CREARE UN RESOURCE CONTROLLER GIA' ASSOCIATO A UN MODELLO:
+
+```bash
+php artisan make:controller Admin/ComicsController --resource --model=Comic
+```
+
 ## CONTROLLARE LA LISTA DELLE ROUTES
 
 ```bash
@@ -217,7 +292,7 @@ CICLIAMO L'ARRAY PER STAMPARE IN PAGINA GLI ELEMENTI DESIDERATI E LINKIAMO LA RO
 ```php
 @foreach ($comics as $comic)
 <!-- CODICE -->
-<a href="{{ route('details', $comic) }}">
+    <a href="{{ route('details', $comic) }}">
 <!-- CODICE -->
 @endforeach
 ```
@@ -244,9 +319,9 @@ ORA E' POSSIBILE CICLARE $comics NELLA VISTA COLLEGATA ALLA ROUTE:
 
 ```php
 @forelse ($comics as $comic)
-// CODICE
-<p>{{ $comic->title }}</p>
-// CODICE
+    // CODICE
+    <p>{{ $comic->title }}</p>
+    // CODICE
 @empty
     <h1>Database is empty</h1>
 @endforelse
@@ -342,7 +417,7 @@ public function store(Request $request)
 
 ## FILE STORAGE - UPLOAD AN IMAGE
 
-MODIFICARE config/filestystems.php IN DA local in public.
+MODIFICARE ***config/filestystems.php*** IN DA local in public.
 
 LA FUNZIONE env() VERIFICA SE NEL FILE .env E' PRESENTE UNA CHIAVE CON IL VALORE INDICATO NEL PRIMO PARAMETRO (FILESYSTEM_DISK). SE PRESENE UTILIZZA QUEL VALORE, ALTRIMENTI UTILIZZA IL VALORE PASSATO COME SECONDO PARAMETRO (public).
 
@@ -350,18 +425,19 @@ LA FUNZIONE env() VERIFICA SE NEL FILE .env E' PRESENTE UNA CHIAVE CON IL VALORE
 'default' => env('FILESYSTEM_DISK', 'public'),
 ```
 
-MODIFICARE LA STRINGA FILESYSTEM_DISK= DEL FILE .ev in public IN QUESTO MODO LARRAVEL DIRIGERA' AUTOMATICAMENTE I NOSTRI FILE CARICATI NELLA CARTELLA storage/app/public
+MODIFICARE LA STRINGA ***FILESYSTEM_DISK=*** DEL FILE ***.env*** in public IN QUESTO MODO LARRAVEL DIRIGERA' AUTOMATICAMENTE I NOSTRI FILE CARICATI NELLA CARTELLA ***storage/app/public***
 
 ```php
 FILESYSTEM_DISK=public
 ```
+
 COLLEGHIAMO LO STORAGE CHE COLLEGA ALLA CARTELLA storage/app/public DA TERMINALE
 
 ```bash
 php artisan storage:link
 ```
 
-CREIAMO IL FORM INDICANDO L'ATTRIBUTO enctype="multipart/form-data" IN MODO DA POTER INDICARE AL FORM LA PRESENZA DI FILES DI VARIO FORMATO
+CREIAMO IL FORM INDICANDO L'ATTRIBUTO ***enctype="multipart/form-data"*** IN MODO DA POTER INDICARE AL FORM LA PRESENZA DI FILES DI VARIO FORMATO
 
 ```php
 <form action="{{ route('admin.store') }}" method="POST" enctype="multipart/form-data">
@@ -522,4 +598,55 @@ public function update(Request $request, Comic $comic)
     return to_route('comics.show', $comic); // RIDIRIGE ALLA VISTA DEL DETTAGLIO DELL'ELEMENTO APPENA MODIFICATO
 
     }
+```
+
+## CRUD - DESTROY
+
+CREIAMO UN FORM CON METODO POST CHE INDIRIZZA ALLA ROTTA .destroy.
+
+UTILIZZIAMO IL TOKEN `@method('DELETE')` PER SOVRASCRIVERE IL METODO DEL FORM
+
+UTILIZZIAMO SEMPRE IL TOKEN `@csrf`
+
+```php
+<form action="{{route('comic.destroy', $comic)}}" method="POST">
+    @csrf
+    @method('DELETE')
+    <button class="btn btn-danger m-2" type="submit">DELETE</button>
+</form>
+```
+
+EDITIAMO IL METODO destroy NEL CONTROLLER:
+
+```php
+public function destroy(Comic $comic)
+{
+    // CONTROLLA SE L'ISTANZA HA UN FILE DI ANTEPRIMA. SE SI LO ELIMINA DAL filesystem
+    if(!is_null($comic->thumb)) {
+        Storage::delete($comic->thumb);
+    }
+    
+    // ELIMINA IL RECORD DAL DATABASE
+    $comic->delete();
+
+    // RIDIRIGE AD UNA ROTTA DESIDERATA CON UN MESSAGGIO
+    return to_route('comics.index')->with('message', 'Well Done, Element Deleted Succeffully');
+}
+```
+
+SE LA NOSTRA FLASHED SESSION CONTIENE UN DATO CHIAMATO 'message' ALLORA MOSTRIAMOLO IN PAGINA.
+
+IL MESSAGGIO POTREBBE ANCHE ESSERE MOSTRATO ANCHE PER L'AGGIUNTA DI NUOVI RECORD O PER LA LORO MODIFICA, BASTA AGGIUNGERE L'ECHO NELLA VISTA DESIDERATA.
+https://laravel.com/docs/10.x/responses#redirecting-with-flashed-session-data
+
+```php
+@if (session('message'))
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+        <strong>Holy guacamole!</strong> {{session('message')}}
+    </div>
+
+@endif
 ```
