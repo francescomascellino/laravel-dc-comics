@@ -165,7 +165,7 @@ php artisan migrate
 ## ESEGUIRE IL SEEDING
 
 ```bash
-php artisan db:seed --class=ComicTableSeder
+php artisan db:seed --class=ComicTableSeeder
 ```
 OPPURE PER DROPPARE E RIPOPOLARE IL DATABASE ALLO STESSO MOMENTO:
 
