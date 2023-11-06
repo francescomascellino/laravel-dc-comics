@@ -908,7 +908,7 @@ public function store(StoreComicRequest $request)
     }
 ```
 
-SOFT DELETE
+## SOFT DELETE
 
 https://laravel.com/docs/10.x/eloquent#soft-deleting
 
