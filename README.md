@@ -1012,7 +1012,7 @@ IN ***index.blade.php*** POSSIAMO USARE IL METODO ***trashed()*** PER CONTROLLAR
             <td class="align-middle" scope="row">{{ $comic->id }}
 
                 @if ($comic->trashed())
-                    This is a trashed element
+                    <p class="text-danger"><strong>This record has been deleted on {{ $comic->deleted_at }}</strong></p>
                 @endif
 
             </td>
