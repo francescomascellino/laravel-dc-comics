@@ -29,13 +29,16 @@
                             @forelse ($comics as $comic)
                                 <tr class="">
                                     <td class="align-middle" scope="row">{{ $comic->id }}
-                                        @if ($comic->trashed())
-                                            This is a trashed element
-                                        @endif
                                     </td>
 
                                     <td class="align-middle">{{ $comic->title }} - <a
-                                            href="{{ route('comics.show', $comic) }}">Details</a></td>
+                                            href="{{ route('comics.show', $comic) }}">Details</a>
+                                        @if ($comic->trashed())
+                                            <p class="text-danger"><strong>This record has been deleted on
+                                                    {{ $comic->deleted_at }}</strong></p>
+                                            {{-- <button onclick="{{$comic->restore()}}">Restore</button> --}}
+                                        @endif
+                                    </td>
 
                                     <td class="align-middle">{{ $comic->price }}</td>
 

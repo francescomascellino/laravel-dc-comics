@@ -995,6 +995,12 @@ public function index()
 }
 ```
 
+IL METODO onlyTrashed() INVECE DA COME OUTPUT SOLTANDO GLI ELEMENTI SOFT DELETED
+
+```php
+$comics = Comic::onlyTrashed()->get();
+```
+
 IN ***index.blade.php*** POSSIAMO USARE IL METODO ***trashed()*** PER CONTROLLARE SE IL RECORD E' SOFT DELETED ED EVENTUALMENTE SEGNALARLO COME TALE O ANCHE STAMPARLO IN UNA TABELLA DIFFERENTE
 
 ```php
@@ -1017,4 +1023,16 @@ IN ***index.blade.php*** POSSIAMO USARE IL METODO ***trashed()*** PER CONTROLLAR
     @endforelse
 
 </tbody>
+```
+
+PER RIMUOVERE IL SOFT DELETE DA UN RECORD E' NECESSARIO USARE IL METODO ***restore()*** 
+
+```php
+$comic->restore();
+```
+
+PER ELIMINARE DEFINITIVAMENTE UN RECORD INVECE UTILIZZARE ***forceDelete()***
+
+```php
+$comic->forceDelete();
 ```
