@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreComicRequest;
+use App\Http\Requests\UpdateComicRequest;
 use App\Models\Comic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -31,12 +33,11 @@ class ComicController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    // LA REQUEST CLASS StoreComicRequest ADESSO GESTISCE LA REQUEST
+    public function store(StoreComicRequest $request)
     {
-
-
-        // VALIDATION
-
+        // VALIDATION (ORA INSERITA IN StoreComicRequest)
+        /* 
         $valData = $request->validate(
             [
                 'title' => 'required|bail|min:3|max:100',
@@ -45,6 +46,7 @@ class ComicController extends Controller
                 'series' => 'nullable|min:3|max:100',
             ]
         );
+        */
 
         // NON USATO CON VALIDATION:
         // $data = $request->all();
@@ -73,9 +75,10 @@ class ComicController extends Controller
             $file_path = Storage::put('comics_thumbs', $request->thumb);
             $data['thumb'] = $file_path;
         }
-
-        
          */
+
+        // ASSEGNA ALLA VARIABILE I VALORI GIA' VALIDATI DALLA CLASSE StoreComicRequest
+        $valData = $request->validated();
 
         // CON VALIDATION
         if ($request->has('thumb')) {
@@ -107,8 +110,10 @@ class ComicController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comic $comic)
+    public function update(UpdateComicRequest $request, Comic $comic)
     {
+        // VALIDATION (ORA INSERITA IN UpdateComicRequest)
+        /* 
         $valData = $request->validate(
             [
                 'title' => 'required|bail|min:3|max:100',
@@ -117,6 +122,7 @@ class ComicController extends Controller
                 'series' => 'nullable|min:3|max:100',
             ]
         );
+         */
 
         // NON UTILIZZATO CON VALIDATION
         // $data = $request->all();
@@ -135,6 +141,9 @@ class ComicController extends Controller
         } 
         */
 
+        // ASSEGNA ALLA VARIABILE I VALORI GIA' VALIDATI DALLA CLASSE UpdateComicRequest
+        $valData = $request->validated();
+
         // SE LA REQUEST CONTIENE UN CAMPO IMMAGINE
         if ($request->has('thumb')) {
 
@@ -152,7 +161,7 @@ class ComicController extends Controller
             $valData['thumb'] = $path;
         }
 
-        // AGGIORNA L'ENTITA' CON I VALORI DI $data
+        // AGGIORNA L'ENTITA' CON I VALORI DI $valData
         $comic->update($valData);
         return to_route('comics.show', $comic)->with('message', 'Well Done, Element Edited Succeffully');
     }

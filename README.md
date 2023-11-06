@@ -17,6 +17,8 @@
 - <a href="#visualizzare-le-immagini-caricate" target="_blank">VISUALIZZARE LE IMMAGINI CARICATE</a>
 - <a href="#crud---edit" target="_blank">CRUD - EDIT</a>
 - <a href="#crud---destroy" target="_blank">CRUD - DESTROY</a>
+- <a href="#validation" target="_blank">VALIDATION DEI FORM</a>
+- <a href="#validation---gestione-degli-errori" target="_blank">VALIDATION - GESTIONE DEGLI ERRORI</a>
 
 - <a href="https://github.com/fabiopacifici/104_laravel_lightsabers/blob/444355619943da593f9d68027d232c7e70afb32e/README.md" target="_blank">Step by Step Guide by fabiopacifici</a>
 
@@ -716,23 +718,28 @@ GLI ERRORI VENGONO CONSERVATI NEGLI ERRORI NELLA VARIABILE  GLOBALE $errors E PO
     </div>
 @endif
 ```
-The @error Directive
-You may use the @error Blade directive to quickly determine if validation error messages exist for a given attribute. Within an @error directive, you may echo the $message variable to display the error message:
+LA DIRETTIVA BLADE ***@error*** CI PERMETTE DI CONTROLLARE SE PER UN DETERMINATO ATTRIBUTO ESISTE UN ERRORE ED EVENTUALMENTE EFFETTUARNE UN ***echo*** IN PAGINA
 
 ```php 
-<label for="title">Post Title</label>
- 
-<input id="title"
-    type="text"
-    name="title"
-    class="@error('title') is-invalid @enderror">
- 
-@error('title')
-    <div class="text-danger">{{ $message }}</div>
-@enderror
+<div class="mb-3">
+
+    <label for="title" class="form-label"><strong>Titolo</strong></label>
+
+        <input type="text" class="form-control" 
+        name="title" 
+        id="title" 
+        aria-describedby="helpTitle" 
+        placeholder="Inserisci il titolo del prodotto"  
+        value="{{ old('title') }}">
+
+        @error('title')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+
+</div>
 ```
 
-To retrieve flashed input from the previous request, invoke the old method on an instance of Illuminate\Http\Request. The old method will pull the previously flashed input data from the session:
+PER RECUPERARE IL VECCHIO VALORE DI UNA PRCEDENTE REQUEST, E' POSSIBILE INVOCARE IL METODO ***old()***. IL METODO RECUPERERA' IL PRECEDENTE VALORE DALLA SESSIONE.
 
 ```php
 $title = $request->old('title');
@@ -740,10 +747,13 @@ $title = $request->old('title');
 
 Laravel also provides a global old helper. If you are displaying old input within a Blade template, it is more convenient to use the old helper to repopulate the form. If no old input exists for the given field, null will be returned:
 
+LARAVEL HA ANCHE UN HELPER GLOBALE ***old()*** CHE CI PERMETTE DI RIPOPOLARE IL FORM. SE NON VI SONO VECCHI VALORI PER UN DETERMINATO CAMPO VERRA' RESTITUITO ***null***.
+
 ```php
 <input type="text" name="title" value="{{ old('title') }}">
 ```
-OPPURE PER PASSARE IL VALORE DI DEFAULT SE NON ESISTE UN ERRORE SUL CAMPO CONTROLLATO:
+
+E' QUINDI POSSIBILE PASSARE UN VALORE DI DEFAULT SE NON ESISTE UN ERRORE SUL CAMPO CONTROLLATO, AD ESEMPIO SE STIAMO MODIFICANDO UN ELEMENTO ESISTENTE ANZICHE' CREARNE UNO NUOVO:
 
 ```php
 <input type="text" name="title" value="{{ old('title, $comic->title') }}">
@@ -797,12 +807,31 @@ https://laravel.com/docs/10.x/validation#creating-form-requests
 
 ```bash
 php artisan make:request Store[NOME]Request (PER LE STORE QUESTS)
-// OPPURE php artisan make:request Update[NOME]Request (PER LE UPDATE REQUEST)
+```
+OPPURE PER LE UPDATE REQUEST
+
+```bash
+php artisan make:request Update[NOME]Request
+```
+QUINDI PER QUESTO ESERCIZIO VERRANNO USATI I COMANDI ARTISAN:
+
+```bash
+php artisan make:request StoreComicRequest
+php artisan make:request UpdateComicRequest
 ```
 
-on the Requests/Store[NOME]Request.php
+NEL FILE DELLA REQUEST DENTRO LA CARTELLA ***Http/Requests*** SETTARE SU `true` L'AUTORIZZAZIONE NEL METODO ***uthorize()***
+```php
+/**
+ * Determine if the user is authorized to make this request.
+ */
+public function authorize(): bool
+    {
+        return true;
+    }
+```
 
-SETTARE `true` L'AUTORIZZAZIONE `public function authorize() { return ..}`
+INSERIRE LE REGOLE NEL METODO ***rules()***
 
 ```php
 /**
@@ -814,42 +843,66 @@ public function rules(): array
 {
     // VALIDATION RULES
     return [
-        'title' => 'required|unique:posts|max:255',
-        'body' => 'required',
+        'title' => 'required|bail|min:3|max:100',
+        'thumb' => 'nullable|image|max:150',
+        'price' => 'required|min:3|max:7',
+        'series' => 'nullable|min:3|max:100',
     ];
 }
 ```
-ON THE CONTROLLER:
 
-AGGIUNGERE
+AGGIUNGERE L'***@use*** DELLE REQUEST NEL CONTROLLER
 
 ```php
-@use 'PERCORSO DELLA REQUEST'
+use App\Http\Requests\StoreComicRequest;
+use App\Http\Requests\UpdateComicRequest;
 ```
 
 MODIFICARE I METODI
 
 ```php
-/**
- * Store a new blog post.
- */
-
-// USA REQUEST Store[NOME]Request CLASS ANZICHE' Request NEL METODO STORE
-public function store(Store[NOME]Request $request)
+// USA REQUEST StoreComicRequest CLASS ANZICHE' Request NEL METODO STORE
+public function store(StoreComicRequest $request)
 {
-    // The incoming request is valid...
- 
-    // Retrieve the validated input data...
+
+    // ASSEGNA ALLA VARIABILE I VALORI GIA' VALIDATI DALLA CLASSE StoreComicRequest
     $validated = $request->validated();
+
+    // SALVA I DATI IN UNA NUOVA ISTANZA DEL MODELLO Comic
+    $newComic = Comic::create($validated);
  
-    // Retrieve a portion of the validated input data...
-    $validated = $request->safe()->only(['name', 'email']);
-    $validated = $request->safe()->except(['name', 'email']);
- 
-    // Store the blog post...
- 
-    return redirect('/posts');
+    return to_route('comics.index')->with('message', 'Well Done, New Entry Added Succeffully');
 }
+```
+
+```php
+    public function update(UpdateComicRequest $request, Comic $comic)
+    {
+
+        // ASSEGNA ALLA VARIABILE I VALORI GIA' VALIDATI DALLA CLASSE UpdateComicRequest
+        $validated = $request->validated();
+
+        // SE LA REQUEST CONTIENE UN CAMPO IMMAGINE
+        if ($request->has('thumb')) {
+
+            // SALVA L'IMMAGINE NEL FILESYSTEM
+            $newCover = $request->thumb;
+            $path = Storage::put('comics_thumbs', $newCover);
+
+            // SE IL FUMETTO HA GIA' UNA COVER NEL DB  NEL FILE SYSTEM, DEVE ESSERE ELIMINATA DATO CHE LA STIAMO SOSTITUENDO
+            if (!isNull($comic->thumb) && Storage::fileExists($comic->thumb)) {
+                // ELIMINA LA VECCHIA COVER
+                Storage::delete($comic->thumb);
+            }
+
+            // ASSEGNA AL VALORE DI $validated IL PERCORSO DELL'IMMAGINE NELLO STORAGE
+            $validated['thumb'] = $path;
+        }
+
+        // AGGIORNA L'ENTITA' CON I VALORI DI $validated
+        $comic->update($validated);
+        return to_route('comics.show', $comic)->with('message', 'Well Done, Element Edited Succeffully');
+    }
 ```
 
 SOFT DELETE
