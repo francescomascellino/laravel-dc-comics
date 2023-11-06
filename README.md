@@ -669,35 +669,41 @@ https://laravel.com/docs/10.x/responses#redirecting-with-flashed-session-data
 @endif
 ```
 
-VALIDATION
+## VALIDATION
 
-CONSENTE DI EFFETTUARE DELLE VALIDAZIONI LATO FRONT IN MODO DA NON INVIARE QUERY ERRATE ED EVENTUALMENTE DANNOSE AL DATABASE
+LA VALIDAZIONE CONSENTE DI EFFETTUARE DELLE VALIDAZIONI LATO FRONT IN MODO DA NON INVIARE QUERY ERRATE ED EVENTUALMENTE DANNOSE AL DATABASE.
 
-Validate method on store method
-RULES: https://laravel.com/docs/10.x/validation#available-validation-rules
+ELENCO DELLE REGOLE DI VALIDAZIONE: https://laravel.com/docs/10.x/validation#available-validation-rules
+
+AD ESEMPIO PER VALIDARE UN METODO ***store***:
 
 ```php
 /**
  * Store a new blog post.
  */
-public function store(Request $request): RedirectResponse
+public function store(Request $request)
 {
     $validated = $request->validate(
         [
-        'title' => 'required|unique:posts|max:255', // name campo form (uguale al nome della colonna) => regole
-        'body' => 'required',
+            // nome campo form (uguale al nome della colonna) => regole
+            'title' => 'required|bail|min:3|max:100',
+            'thumb' => 'nullable|image|max:150',
+            'price' => 'required|min:3|max:7',
+            'series' => 'nullable|min:3|max:100', 
+        
         ]
     );
  
-    // The blog post is valid...
 
-    $post = Post::create($validated); // MASS ASSIGNMENT
+    $newComic = Comic::create($validated); // MASS ASSIGNMENT
  
-    return redirect('/posts');
+    return to_route('comics.index')->with('message', 'Well Done, New Entry Added Succeffully');
 }
 ```
 
-GLI ERRORI VENGONO CONSERVATI NEGLI ERRORI NELLA VARIABILE $errors
+### VALIDATION - GESTIONE DEGLI ERRORI
+
+GLI ERRORI VENGONO CONSERVATI NEGLI ERRORI NELLA VARIABILE  GLOBALE $errors E POSSONO ESSERE STAMPATI IN PAGINA
 
 ```php
 @if ($errors->any())
@@ -741,8 +747,49 @@ OPPURE PER PASSARE IL VALORE DI DEFAULT SE NON ESISTE UN ERRORE SUL CAMPO CONTRO
 
 ```php
 <input type="text" name="title" value="{{ old('title, $comic->title') }}">
+```
+
 SE NON FUZIONA:
+
+```php
 <input type="text" name="title" value="{{ old('title') ? old('title') : $comic->title}}">
+```
+
+MESSAGGI DI ERRORE PERSONALIZZATI
+
+PER PERSONALIZZARE I FILE DI LINGUAGGIO DI LARAVEL E' NECCASSIO EFFETTUARE LO SCAFFOLD DELLA CARTELLA `lang`
+
+```bash
+php artisan lang:publish
+```
+
+QUESTO CREERA' LA CARTELLA ***lang***. AL SUO INTERNO TROVEREMO LA CARTELLA ***eng*** E IL FILE ***validation.php*** CHE CONTIENE I MESSAGGI DELLE REGOLE DI VALIDAZIONE.
+
+ALLA FINE DELL'ARRAY TROVEREMO LA CHIAVE ***'custom'*** CHE CI PERMETTE L'INSERIMENTO DI VALORI PERSONALIZZATI:
+
+```php
+    'custom' => [
+
+        // NESSAGGI PERSONALIZZATI PER OGNI REGOLA DEI VARI ATTRIBUTI
+        'title' => [
+            'required' => 'Il campo :attribute è obbligatorio!',
+
+            'min' => [
+                'string' => 'Il campo :attribute deve contenere almeno :min caratteri.',
+            ],
+
+            'max' => [
+                'string' => 'Il campo :attribute non deve contenere più di :max caratteri.',
+            ],
+        ],
+
+    // NOMI PERSONALIZZATI PER OGNI ATTRIBUTO DA USA COME PLACEHOLDER
+    'attributes' => [
+        'title' => 'Titolo',
+        'thumb' => 'Copertina',
+        'price' => 'Prezzo',
+        'series' => 'Serie',
+    ],
 ```
 
 FORM REQUEST CLASS WITH THE VALIDATION RULES
