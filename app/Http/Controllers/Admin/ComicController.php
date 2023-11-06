@@ -19,8 +19,9 @@ class ComicController extends Controller
      */
     public function index()
     {
-        $comics = Comic::withTrashed()->get();
-        return view('admin.index', compact('comics'));
+        $comics = Comic::all();
+        $trashed_comics = Comic::onlyTrashed()->get();
+        return view('admin.index', compact('comics', 'trashed_comics'));
     }
 
     /**
@@ -181,6 +182,6 @@ class ComicController extends Controller
         $comic->delete();
 
         // RIDIRIGE AD UNA ROTTA DESIDERATA CON UN MESSAGGIO
-        return to_route('comics.index')->with('message', 'Well Done, Element Deleted Succeffully');
+        return to_route('comics.index')->with('message', 'Well Done, Element Soft-Deleted Succeffully');
     }
 }

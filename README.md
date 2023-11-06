@@ -1001,6 +1001,15 @@ IL METODO onlyTrashed() INVECE DA COME OUTPUT SOLTANDO GLI ELEMENTI SOFT DELETED
 $comics = Comic::onlyTrashed()->get();
 ```
 
+```php
+public function index()
+    {
+        $comics = Comic::all();
+        $trashed_comics = Comic::onlyTrashed()->get();
+        return view('admin.index', compact('comics', 'trashed_comics'));
+    }
+```
+
 IN ***index.blade.php*** POSSIAMO USARE IL METODO ***trashed()*** PER CONTROLLARE SE IL RECORD E' SOFT DELETED ED EVENTUALMENTE SEGNALARLO COME TALE O ANCHE STAMPARLO IN UNA TABELLA DIFFERENTE
 
 ```php
