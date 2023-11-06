@@ -19,6 +19,7 @@
 - <a href="#crud---destroy" target="_blank">CRUD - DESTROY</a>
 - <a href="#validation" target="_blank">VALIDATION DEI FORM</a>
 - <a href="#validation---gestione-degli-errori" target="_blank">VALIDATION - GESTIONE DEGLI ERRORI</a>
+- <a href="#form-requests---classi-contenenti-le-regole-di-validazione" target="_blank">FORM REQUESTS - CLASSI CONTENENTI LE REGOLE DI VALIDAZIONE</a>
 
 - <a href="https://github.com/fabiopacifici/104_laravel_lightsabers/blob/444355619943da593f9d68027d232c7e70afb32e/README.md" target="_blank">Step by Step Guide by fabiopacifici</a>
 
