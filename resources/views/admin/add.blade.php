@@ -22,7 +22,7 @@
                             <label for="title" class="form-label"><strong>Titolo</strong></label>
 
                             <input type="text" class="form-control" name="title" id="title"
-                                aria-describedby="helpTitle" placeholder="Inserisci il titolo del prodotto" required value="{{ old('title') }}">
+                                aria-describedby="helpTitle" placeholder="Inserisci il titolo del prodotto"  value="{{ old('title') }}">
 
                             @error('title')
                                 <div class="text-danger">{{ $message }}</div>
@@ -35,7 +35,7 @@
                             <label for="price" class="form-label"><strong>Prezzo</strong></label>
 
                             <input type="text" class="form-control" name="price" id="price"
-                                aria-describedby="helpprice" placeholder="Inserisci il prezzo del prodotto" required value="{{ old('price') }}">
+                                aria-describedby="helpprice" placeholder="Inserisci il prezzo del prodotto"  value="{{ old('price') }}">
 
                             @error('price')
                                 <div class="text-danger">{{ $message }}</div>
