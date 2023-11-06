@@ -9,6 +9,7 @@ use App\Models\Comic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+use function Pest\Laravel\get;
 use function PHPUnit\Framework\isNull;
 
 class ComicController extends Controller
@@ -18,7 +19,7 @@ class ComicController extends Controller
      */
     public function index()
     {
-        $comics = Comic::all();
+        $comics = Comic::withTrashed()->get();
         return view('admin.index', compact('comics'));
     }
 

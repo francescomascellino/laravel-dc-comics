@@ -28,7 +28,11 @@
                         <tbody>
                             @forelse ($comics as $comic)
                                 <tr class="">
-                                    <td class="align-middle" scope="row">{{ $comic->id }}</td>
+                                    <td class="align-middle" scope="row">{{ $comic->id }}
+                                        @if ($comic->trashed())
+                                            This is a trashed element
+                                        @endif
+                                    </td>
 
                                     <td class="align-middle">{{ $comic->title }} - <a
                                             href="{{ route('comics.show', $comic) }}">Details</a></td>
@@ -76,10 +80,10 @@
                                                     </div>
                                                     <div class="modal-body">
 
-                                                        <p>Do you want to delete "{{$comic->title}}"?</p>
+                                                        <p>Do you want to delete "{{ $comic->title }}"?</p>
 
                                                         <p>This operation is not reversible!</p>
-                                                        
+
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-success"

@@ -6,7 +6,7 @@
 
 - <a href="#creare-un-nuovo-progetto" target="_blank">CREARE UN NUOVO PROGETTO</a>
 - <a href="#create-app-layouts" target="_blank">CREARE LAOUT DELL'APP</a>
-- <a href="#creare-una-migration-e-un-seeder-per-popolare-il-data" target="_blank">CREARE UNA MIGRATION E UN SEEDER PER POPOLARE IL DATABASE</a>
+- <a href="#creare-una-migration-e-un-seeder-per-popolare-il-database" target="_blank">CREARE UNA MIGRATION E UN SEEDER PER POPOLARE IL DATABASE</a>
 - <a href="#eseguire-la-migrazione" target="_blank">ESEGUIRE MIGRATION E SEEDING</a>
 - <a href="#creare-un-resource-controller" target="_blank">CREARE UN RESOURCE CONTROLLER</a>
 - <a href="#restful-crud---index-leggere-i-details" target="_blank">CRUD - INDEX</a>
@@ -20,6 +20,8 @@
 - <a href="#validation" target="_blank">VALIDATION DEI FORM</a>
 - <a href="#validation---gestione-degli-errori" target="_blank">VALIDATION - GESTIONE DEGLI ERRORI</a>
 - <a href="#form-requests---classi-contenenti-le-regole-di-validazione" target="_blank">FORM REQUESTS - CLASSI CONTENENTI LE REGOLE DI VALIDAZIONE</a>
+- <a href="#soft-delete" target="_blank">SOFT DELETE</a>
+
 
 - <a href="https://github.com/fabiopacifici/104_laravel_lightsabers/blob/444355619943da593f9d68027d232c7e70afb32e/README.md" target="_blank">Step by Step Guide by fabiopacifici</a>
 
@@ -910,6 +912,109 @@ public function store(StoreComicRequest $request)
 
 ## SOFT DELETE
 
+OLTRE A POTER ELIMINARE DEFINITIVAMENTE UN RECORD DAL NOSTRO DATABASE E' POSSIBILE ABILITARE IL "SOFT DELETE". QUANDO UN MODELLO E' SOFT DELETED NON E' EFFETTIVAMENTE RIMOSSO IN MANIERA PERMANENTE, MA GLI VIENE ASSEGNATO UN NUOVO ATTRIBUTO ***deleted_at*** CHE INDICA DATA E ORA DI QUANDO L'ELEMENTO E' STATO ELIMINATO.
+I RECORD SOFT DELETED NON COMPAIONO QUANDO VENGONO CICLATI A MENO CHE NON SIAMO NOI A RICHIEDERLO SPECIFICAMENTE QUANDO CREIAMO LA QUERY.
 https://laravel.com/docs/10.x/eloquent#soft-deleting
 
+PER UTILIZZARE IL SOFT DELETE DOBBIAMO AGGIUNGERE IL TRATTO ELOQUENT ***Illuminate\Database\Eloquent\SoftDeletes*** AL MODELLO INTERESSATO.
 
+(App/Models/Comic.php)
+
+```php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes; // SOFT DELETE
+
+class Comic extends Model
+{
+    use HasFactory;
+
+    use SoftDeletes; // SOFT DELETE
+
+    // ASSEGNA LA TABELLA COMICS
+    protected $table = "comics";
+
+    // ASSEGNA I CAMPI MODIFICABILI IN MASSA (MASS ASSIGNEMENT)
+    protected $fillable = ['title', 'price', 'series', 'thumb'];
+}
+```
+
+SE ABBIAMO GIA' EFFETTUATO LA MIGRATION DOBBIAMO AGGIORNARE IL DATABASE INSERENDO LA NUOVA COLONNA CREANDO UNA MIGRATION DI UPDATE. QUESTO CI PERMETTERA' DI AGGUNGERE IL CAMPO DESIDERATO
+https://github.com/francescomascellino/laravel-migration-seeder#if-it-is-needed-to-update-the-table
+
+```bash
+php artisan make:migration update_comics_table --table=comics
+```
+
+AGGIUNGIAMO NEI METODI ***up()*** E ***down()*** DELLA MIGRATION APPENA CREATA LE ISTRUZIONI PER AGGIUNGERE (***up()***) IL SoftDeletes E PER EFFETTUARE IL ROLLBACK (***down()***)
+
+```php
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('comics', function (Blueprint $table) {
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('comics', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
+    }
+};
+```
+
+ESEGUIAMO LA MIGRAZIONE PER RENDERE EFFETTIVE LE MODIFICHE
+
+```bash
+php artisan migrate
+```
+
+ADESSO IL DATABASE HA LA COLONNA deleted_at E IN CASO DI ELIMINAZIONE DI UN RECORD, QUESTO VERRA' SEMPLICEMENTE NASCOSTO.
+
+PER VISUALIZZARE ANCHE GLI ELEMENTI CANCELLATI BISOGNA INVOCARE SUL MODELLO IL METODO withTrashed() QUANDO CREIAMO LA QUERY
+
+AD ESEMPIO IL NOSTRO METODO index() IN ComicController DOVREBBE DIVENTARE:
+
+```php
+public function index()
+{
+    $comics = Comic::withTrashed()->get();
+    return view('admin.index', compact('comics'));
+}
+```
+
+IN ***index.blade.php*** POSSIAMO USARE IL METODO ***trashed()*** PER CONTROLLARE SE IL RECORD E' SOFT DELETED ED EVENTUALMENTE SEGNALARLO COME TALE O ANCHE STAMPARLO IN UNA TABELLA DIFFERENTE
+
+```php
+<tbody>
+
+    @forelse ($comics as $comic)
+
+        <tr class="">
+            <td class="align-middle" scope="row">{{ $comic->id }}
+
+                @if ($comic->trashed())
+                    This is a trashed element
+                @endif
+
+            </td>
+        </tr>  
+
+    @empty
+        <h1>Database is empty</h1>
+    @endforelse
+
+</tbody>
+```
