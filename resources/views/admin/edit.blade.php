@@ -17,12 +17,19 @@
                         {{-- EDITA IL METODO AFFINCHE' USI IL METODO put() DEL RESOURCE CONTROLLER --}}
                         @method('PUT')
 
+                        @include('partials.error_alert')
+
                         <div class="mb-3">
 
                             <label for="title" class="form-label"><strong>Titolo</strong></label>
 
                             <input type="text" class="form-control" name="title" id="title"
-                                aria-describedby="helpTitle" value="{{ $comic->title }}">
+                                aria-describedby="helpTitle" value="{{ old('title') ? old('title') : $comic->title}}" required>
+
+                            @error('title')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+
                         </div>
 
                         <div class="mb-3">
@@ -30,7 +37,11 @@
                             <label for="price" class="form-label"><strong>Prezzo</strong></label>
 
                             <input type="text" class="form-control" name="price" id="price"
-                                aria-describedby="helpprice" value="{{ $comic->price }}">
+                                aria-describedby="helpprice" value="{{ old('price') ? old('price') : $comic->price}}" required>
+
+                            @error('price')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
 
                         </div>
 
@@ -39,7 +50,11 @@
                             <label for="series" class="form-label"><strong>Serie</strong></label>
 
                             <input type="text" class="form-control" name="series" id="series"
-                                aria-describedby="helpseries" value="{{ $comic->series }}">
+                                aria-describedby="helpseries" value="{{ old('series') ? old('series') : $comic->series}}">
+
+                            @error('series')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
 
                         </div>
 
@@ -62,6 +77,10 @@
 
                             <input type="file" class="form-control" name="thumb" id="thumb" placeholder="Cerca..."
                                 aria-describedby="fileHelpThumb">
+
+                            @error('thumb')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
 
                         </div>
 

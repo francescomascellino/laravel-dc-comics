@@ -15,12 +15,19 @@
 
                         @csrf
 
+                        @include('partials.error_alert')
+
                         <div class="mb-3">
 
                             <label for="title" class="form-label"><strong>Titolo</strong></label>
 
                             <input type="text" class="form-control" name="title" id="title"
-                                aria-describedby="helpTitle" placeholder="Inserisci il titolo del prodotto" required>
+                                aria-describedby="helpTitle" placeholder="Inserisci il titolo del prodotto" required value="{{ old('title') }}">
+
+                            @error('title')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+
                         </div>
 
                         <div class="mb-3">
@@ -28,7 +35,11 @@
                             <label for="price" class="form-label"><strong>Prezzo</strong></label>
 
                             <input type="text" class="form-control" name="price" id="price"
-                                aria-describedby="helpprice" placeholder="Inserisci il prezzo del prodotto" required>
+                                aria-describedby="helpprice" placeholder="Inserisci il prezzo del prodotto" required value="{{ old('price') }}">
+
+                            @error('price')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
 
                         </div>
 
@@ -37,7 +48,11 @@
                             <label for="series" class="form-label"><strong>Serie</strong></label>
 
                             <input type="text" class="form-control" name="series" id="series"
-                                aria-describedby="helpseries" placeholder="Inserisci la serie del prodotto">
+                                aria-describedby="helpseries" placeholder="Inserisci la serie del prodotto" value="{{ old('series') }}">
+
+                            @error('series')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
 
                         </div>
 
@@ -48,6 +63,10 @@
 
                             <input type="file" class="form-control" name="thumb" id="thumb" placeholder="Cerca..."
                                 aria-describedby="fileHelpThumb">
+
+                            @error('thumb')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
 
                         </div>
 

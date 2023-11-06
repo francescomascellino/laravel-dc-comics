@@ -668,3 +668,145 @@ https://laravel.com/docs/10.x/responses#redirecting-with-flashed-session-data
 
 @endif
 ```
+
+VALIDATION
+
+CONSENTE DI EFFETTUARE DELLE VALIDAZIONI LATO FRONT IN MODO DA NON INVIARE QUERY ERRATE ED EVENTUALMENTE DANNOSE AL DATABASE
+
+Validate method on store method
+RULES: https://laravel.com/docs/10.x/validation#available-validation-rules
+
+```php
+/**
+ * Store a new blog post.
+ */
+public function store(Request $request): RedirectResponse
+{
+    $validated = $request->validate(
+        [
+        'title' => 'required|unique:posts|max:255', // name campo form (uguale al nome della colonna) => regole
+        'body' => 'required',
+        ]
+    );
+ 
+    // The blog post is valid...
+
+    $post = Post::create($validated); // MASS ASSIGNMENT
+ 
+    return redirect('/posts');
+}
+```
+
+GLI ERRORI VENGONO CONSERVATI NEGLI ERRORI NELLA VARIABILE $errors
+
+```php
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+```
+The @error Directive
+You may use the @error Blade directive to quickly determine if validation error messages exist for a given attribute. Within an @error directive, you may echo the $message variable to display the error message:
+
+```php 
+<label for="title">Post Title</label>
+ 
+<input id="title"
+    type="text"
+    name="title"
+    class="@error('title') is-invalid @enderror">
+ 
+@error('title')
+    <div class="text-danger">{{ $message }}</div>
+@enderror
+```
+
+To retrieve flashed input from the previous request, invoke the old method on an instance of Illuminate\Http\Request. The old method will pull the previously flashed input data from the session:
+
+```php
+$title = $request->old('title');
+```
+
+Laravel also provides a global old helper. If you are displaying old input within a Blade template, it is more convenient to use the old helper to repopulate the form. If no old input exists for the given field, null will be returned:
+
+```php
+<input type="text" name="title" value="{{ old('title') }}">
+```
+OPPURE PER PASSARE IL VALORE DI DEFAULT SE NON ESISTE UN ERRORE SUL CAMPO CONTROLLATO:
+
+```php
+<input type="text" name="title" value="{{ old('title, $comic->title') }}">
+SE NON FUZIONA:
+<input type="text" name="title" value="{{ old('title') ? old('title') : $comic->title}}">
+```
+
+FORM REQUEST CLASS WITH THE VALIDATION RULES
+https://laravel.com/docs/10.x/validation#creating-form-requests
+
+```bash
+php artisan make:request Store[NOME]Request (PER LE STORE QUESTS)
+// OPPURE php artisan make:request Update[NOME]Request (PER LE UPDATE REQUEST)
+```
+
+on the Requests/Store[NOME]Request.php
+
+SETTARE `true` L'AUTORIZZAZIONE `public function authorize() { return ..}`
+
+```php
+/**
+ * Get the validation rules that apply to the request.
+ *
+ * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+ */
+public function rules(): array
+{
+    // VALIDATION RULES
+    return [
+        'title' => 'required|unique:posts|max:255',
+        'body' => 'required',
+    ];
+}
+```
+ON THE CONTROLLER:
+
+AGGIUNGERE
+
+```php
+@use 'PERCORSO DELLA REQUEST'
+```
+
+MODIFICARE I METODI
+
+```php
+/**
+ * Store a new blog post.
+ */
+
+// USA REQUEST Store[NOME]Request CLASS ANZICHE' Request NEL METODO STORE
+public function store(Store[NOME]Request $request)
+{
+    // The incoming request is valid...
+ 
+    // Retrieve the validated input data...
+    $validated = $request->validated();
+ 
+    // Retrieve a portion of the validated input data...
+    $validated = $request->safe()->only(['name', 'email']);
+    $validated = $request->safe()->except(['name', 'email']);
+ 
+    // Store the blog post...
+ 
+    return redirect('/posts');
+}
+```
+
+SOFT DELETE
+
+https://laravel.com/docs/10.x/eloquent#soft-deleting
+
+
