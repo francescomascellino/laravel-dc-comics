@@ -1045,3 +1045,28 @@ PER ELIMINARE DEFINITIVAMENTE UN RECORD INVECE UTILIZZARE ***forceDelete()***
 ```php
 $comic->forceDelete();
 ```
+
+I MODELLI SOFT DELETED VENGONO AUTOMATICANENTE ESCLUSI DALLE QUERIES, QUINDI DEVONO ESSERE RECUPERATI OBBLIGATORIAMENTE USANDO I METODI ***withTrashed()*** PER ESSERE RISTORATI O CANCELLATI DEFINITIVAMENTE
+
+AD ESEMPIO NEL CONTROLLER
+
+```php
+public function restore($id) {
+
+        $comic = Comic::withTrashed()->find($id);
+        $comic->restore();
+
+        return to_route('comics.index')->with('message', 'Well Done, Element Restored Succeffully');
+    }
+```
+
+NEL FILE DELLE ROTTE ***routes/web.php*** DEFINIAMO LA ROTTA
+
+```php
+Route::get('admin/restore/{id}', [ComicController::class, 'restore'])->name('restore');
+```
+
+IN PAGINA:
+```php
+<a href="{{ route('restore', $comic->id) }}">Restore</a>
+```

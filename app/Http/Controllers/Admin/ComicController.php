@@ -184,4 +184,12 @@ class ComicController extends Controller
         // RIDIRIGE AD UNA ROTTA DESIDERATA CON UN MESSAGGIO
         return to_route('comics.index')->with('message', 'Well Done, Element Soft-Deleted Succeffully');
     }
+
+    public function restore($id) {
+
+        $comic = Comic::withTrashed()->find($id);
+        $comic->restore();
+
+        return to_route('comics.index')->with('message', 'Well Done, Element Restored Succeffully');
+    }
 }

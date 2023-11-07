@@ -25,6 +25,9 @@ Route::resource('admin/comics', ComicController::class);
 // https://laravel.com/docs/10.x/routing#generating-urls-to-named-routes
 Route::get('comic_details/{comic}', [PageController::class, 'comic_details'])->name('details');
 
+// RESTORE ROUTE
+Route::get('admin/restore/{id}', [ComicController::class, 'restore'])->name('restore');
+
 // ROUTES NAVBAR
 
 Route::get('/', [PageController::class, 'welcome'])->name('comics');

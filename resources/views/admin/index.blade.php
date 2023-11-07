@@ -136,8 +136,9 @@
                                     <td class="align-middle" scope="row">{{ $comic->id }}
                                     </td>
 
-                                    <td class="align-middle">{{ $comic->title }} - <a
-                                            href="{{ route('comics.show', $comic) }}">Details</a>
+                                    <td class="align-middle">{{ $comic->title }} - 
+                                        {{-- <a href="{{ route('comics.show', $comic) }}">Details</a> --}}
+                                        <a href="{{ route('restore', $comic->id) }}">Restore</a>
                                     </td>
 
                                     <td class="align-middle">{{ $comic->price }}</td>
@@ -158,7 +159,7 @@
                                     <td class="align-middle">
 
                                         {{-- EDIT --}}
-                                        <a class="btn btn-warning m-2" href="{{ route('comics.edit', $comic) }}">Edit</a>
+                                        {{-- <a class="btn btn-warning m-2" href="{{ route('comics.edit', $comic) }}">Edit</a> --}}
 
                                         {{-- DELETE --}}
                                         <!-- Modal trigger button -->
@@ -188,18 +189,20 @@
 
                                                         <p>This operation is not reversible!</p>
 
+                                                        <h6 class="text-danger">ALERT: The forceDelete() method has not been implemented yet!</h6>
+
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-success"
                                                             data-bs-dismiss="modal">Cancel</button>
 
-                                                        <form action="{{ route('comics.destroy', $comic) }}"
+                                                        {{-- <form action="{{ route('comics.destroy', $comic) }}"
                                                             method="post">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button class="btn btn-danger m-2"
                                                                 type="submit">DELETE</button>
-                                                        </form>
+                                                        </form> --}}
                                                     </div>
                                                 </div>
                                             </div>
