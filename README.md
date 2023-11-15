@@ -13,7 +13,7 @@
 - <a href="#show-controller---leggere-unentita-nel-dettaglio" target="_blank">CRUD - SHOW</a>
 - <a href="#restful-crud---create-creare-una-nuova-voce-nel-database" target="_blank">CRUD - CREATE</a>
 - <a href="#file-storage---upload-an-image" target="_blank">CARICARE UN'IMMAGINE/SYSTEM STORAGE</a>
-- <a href="#mass-assignmente" target="_blank">MASS ASSIGNMENT</a>
+- <a href="#mass-assignment" target="_blank">MASS ASSIGNMENT</a>
 - <a href="#visualizzare-le-immagini-caricate" target="_blank">VISUALIZZARE LE IMMAGINI CARICATE</a>
 - <a href="#crud---edit" target="_blank">CRUD - EDIT</a>
 - <a href="#crud---destroy" target="_blank">CRUD - DESTROY</a>
@@ -841,7 +841,7 @@ public function authorize(): bool
     }
 ```
 
-<a href="#mass-assignmente" target="_blank">Implementare il Mass Assignment</a>
+<a href="#mass-assignment" target="_blank">Implementare il Mass Assignment</a>
 
 INSERIRE LE REGOLE NEL METODO ***rules()***
 
