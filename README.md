@@ -706,6 +706,11 @@ public function store(Request $request)
 }
 ```
 
+PER FAR SI CHE I VALORI SIANO SOLTANTO QUELLI CHE DESIDERIAMO (AD ESEMPIO INUN FORM SELECT, IN MODO DA EVITARE CHE QUALCUNO MODIFICHI IL VALORE DEI CAMPI)
+```php
+'transmission' => 'nullable|in:automatic,manual',
+```
+
 ### VALIDATION - GESTIONE DEGLI ERRORI
 
 GLI ERRORI VENGONO CONSERVATI NEGLI ERRORI NELLA VARIABILE  GLOBALE $errors E POSSONO ESSERE STAMPATI IN PAGINA
@@ -1069,4 +1074,36 @@ Route::get('admin/restore/{id}', [ComicController::class, 'restore'])->name('res
 IN PAGINA:
 ```php
 <a href="{{ route('restore', $comic->id) }}">Restore</a>
+```
+
+## AUTENTHICATION
+
+Install Laravel Breeze
+
+```bash
+composer require laravel/breeze --dev
+```
+
+```bash
+php artisan breeze:install
+```
+
+### Installa preset laravel 9 bootstrap vite
+```bash
+composer require pacificdev/laravel_9_preset
+```
+### Esegui comando preset AGGIUNGENDO --auth
+
+ATTENZIONE: QUESTO L'AUTENTICAZIONE VA INSERITA ALL'INIZIO: NON E' POSSIBILE USARE IL PRESET:UI UNA SECONDA VOLTA
+```bash
+php artisan preset:ui bootstrap --auth
+```
+```bash
+php artisan migrate
+```
+```bash
+npm install
+```
+```bash
+npm run dev
 ```
