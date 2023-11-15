@@ -841,6 +841,8 @@ public function authorize(): bool
     }
 ```
 
+<a href="#mass-assignmente" target="_blank">Implementare il Mass Assignment</a>
+
 INSERIRE LE REGOLE NEL METODO ***rules()***
 
 ```php
